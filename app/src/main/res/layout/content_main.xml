@@ -19,7 +19,8 @@
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@android:color/darker_gray"
+        android:gravity="center_vertical"
+        android:background="@color/colorPrimaryDark"
         app:bb_showShadow="true"
         android:layout_alignParentBottom="true"
         app:bb_tabXmlResource="@xml/bottom_tabs" />

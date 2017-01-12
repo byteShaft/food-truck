@@ -16,12 +16,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.byteshaft.foodtruck.tabfragment.FavouriteFragment;
+import com.byteshaft.foodtruck.tabfragment.FoodTruckFragment;
+import com.byteshaft.foodtruck.tabfragment.MapFragment;
+import com.byteshaft.foodtruck.tabfragment.SearchFragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
 
     private BottomBar mBottomBar;
 
@@ -37,19 +40,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTabSelected(@IdRes int tabId) {
 
-                if (tabId == R.id.tab_calender) {
-                    // TODO: 10/01/2017 Add fragment
+                if (tabId == R.id.tab_truck_list) {
+                    loadFragment(new FoodTruckFragment());
 
-                } else if (tabId == R.id.tab_document) {
+                } else if (tabId == R.id.tab_map) {
+                    loadFragment(new MapFragment());
 
-                    // TODO: 10/01/2017 Add fragment
+                } else if (tabId == R.id.tab_search) {
+                    loadFragment(new SearchFragment());
 
-                } else if (tabId == R.id.tab_tweets_one) {
-
-                    // TODO: 10/01/2017 Add fragment
-
-                } else if (tabId == R.id.tab_document_two) {
-                    // TODO: 10/01/2017 Add fragment
+                } else if (tabId == R.id.tab_favourite) {
+                    loadFragment(new FavouriteFragment());
                 }
             }
         });

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tabs>
     <tab
-        id="@+id/tab_calender"
-        inActiveColor="#ffffff"
-        activeColor="#ebd093"
-        title="One" />
+        id="@+id/tab_truck_list"
+        inActiveColor="@color/tab_inactive"
+        activeColor="@color/tab_active"
+        title="Food Truck" />
     <tab
-        id="@+id/tab_document"
-        inActiveColor="#ffffff"
-        activeColor="#ebd093"
-        title="Two" />
+        id="@+id/tab_map"
+        inActiveColor="@color/tab_inactive"
+        activeColor="@color/tab_active"
+        title="Maps" />
     <tab
-        id="@+id/tab_tweets_one"
-        inActiveColor="#ffffff"
-        activeColor="#ebd093"
-        title="Three" />
+        id="@+id/tab_search"
+        inActiveColor="@color/tab_inactive"
+        activeColor="@color/tab_active"
+        title="Search" />
 
     <tab
-        id="@+id/tab_document_two"
-        inActiveColor="#ffffff"
-        activeColor="#ebd093"
-        title="Four" />
+        id="@+id/tab_favourite"
+        inActiveColor="@color/tab_inactive"
+        activeColor="@color/tab_active"
+        title="Favourite" />
 
 </tabs>
