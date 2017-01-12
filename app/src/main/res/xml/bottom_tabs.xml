@@ -4,21 +4,25 @@
         id="@+id/tab_truck_list"
         inActiveColor="@color/tab_inactive"
         activeColor="@color/tab_active"
+        icon="@mipmap/truck"
         title="Food Truck" />
     <tab
         id="@+id/tab_map"
         inActiveColor="@color/tab_inactive"
         activeColor="@color/tab_active"
+        icon="@mipmap/map"
         title="Maps" />
     <tab
         id="@+id/tab_search"
         inActiveColor="@color/tab_inactive"
         activeColor="@color/tab_active"
+        icon="@mipmap/search"
         title="Search" />
 
     <tab
         id="@+id/tab_favourite"
         inActiveColor="@color/tab_inactive"
+        icon="@mipmap/fav"
         activeColor="@color/tab_active"
         title="Favourite" />
 
