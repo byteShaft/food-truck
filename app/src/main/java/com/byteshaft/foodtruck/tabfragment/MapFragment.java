@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +56,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (!((AppCompatActivity) getActivity()).getSupportActionBar().isShowing()) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        }
         mBaseView = inflater.inflate(R.layout.map_fragment, container, false);
         fragmentManager = getChildFragmentManager();
         SupportMapFragment mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Map");
         return mBaseView;
     }
 
