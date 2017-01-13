@@ -10,6 +10,8 @@ public class AppGlobals extends Application {
     public static Typeface typefaceBold;
     public static Typeface typefaceNormal;
 
+    public static final String BASE_URL = "http://178.62.35.70/api/";
+
     @Override
     public void onCreate() {
         super.onCreate();
