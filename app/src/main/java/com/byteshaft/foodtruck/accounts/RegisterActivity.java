@@ -5,27 +5,45 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.byteshaft.foodtruck.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private ImageView mImageView;
     private Button mRegisterButton;
     private EditText mUsername;
     private EditText mEmailAddress;
     private EditText mPassword;
     private EditText mVerifyPassword;
+    private EditText mAddress;
+    private EditText mPhoneNumber;
+    private EditText mTruckName;
+    private EditText mProducts;
+    private EditText mLocation;
 
     private String mUsernameString;
     private String mEmailAddressString;
     private String mVerifyPasswordString;
     private String mPasswordString;
+    private String mAddressString;
+    private String mPhoneNumberString;
+    private String mTruckNameString;
+    private String mProductsString;
+    private String mLocationString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        mImageView = (ImageView) findViewById(R.id.photo);
+        mAddress = (EditText) findViewById(R.id.address);
+        mPhoneNumber = (EditText) findViewById(R.id.phone_number);
+        mTruckName = (EditText) findViewById(R.id.truck_name);
+        mProducts = (EditText) findViewById(R.id.products);
         mUsername = (EditText) findViewById(R.id.user_name);
+        mLocation = (EditText) findViewById(R.id.location);
         mEmailAddress = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         mVerifyPassword = (EditText) findViewById(R.id.verify_password);
@@ -33,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 13/01/2017 Run registration Task 
+                validateEditText();
             }
         });
     }
@@ -44,6 +62,42 @@ public class RegisterActivity extends AppCompatActivity {
         mVerifyPasswordString = mVerifyPassword.getText().toString();
         mEmailAddressString = mEmailAddress.getText().toString();
         mUsernameString = mUsername.getText().toString();
+
+        mLocationString = mLocation.getText().toString();
+        mAddressString = mAddress.getText().toString();
+        mPhoneNumberString = mPhoneNumber.getText().toString();
+        mTruckNameString = mTruckName.getText().toString();
+        mProductsString = mProducts.getText().toString();
+
+        if (mAddressString.trim().isEmpty()) {
+            mAddress.setError("required");
+        } else {
+            mAddress.setError(null);
+        }
+
+        if (mLocationString.trim().isEmpty()) {
+            mLocation.setError("required");
+        } else {
+            mLocation.setError(null);
+        }
+
+        if (mPhoneNumberString.trim().isEmpty()) {
+            mPhoneNumber.setError("required");
+        } else {
+            mPhoneNumber.setError(null);
+        }
+
+        if (mTruckNameString.trim().isEmpty()) {
+            mTruckName.setError("required");
+        } else {
+            mTruckName.setError(null);
+        }
+
+        if (mProductsString.trim().isEmpty()) {
+            mProducts.setError("required");
+        } else {
+            mProducts.setError(null);
+        }
 
         if (mUsernameString.trim().isEmpty()) {
             mUsername.setError("required");

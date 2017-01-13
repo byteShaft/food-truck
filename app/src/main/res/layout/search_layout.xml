@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark">
 
     <EditText
         android:id="@+id/search_bar"
@@ -13,5 +14,12 @@
         android:background="@android:drawable/edit_text"
         android:drawableRight="@android:drawable/ic_menu_search"
         android:hint="Search food truck" />
+    
+    <ListView
+        android:id="@+id/truck_list"
+        android:background="@null"
+        android:layout_below="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
