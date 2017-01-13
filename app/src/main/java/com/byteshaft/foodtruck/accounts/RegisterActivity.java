@@ -1,5 +1,7 @@
 package com.byteshaft.foodtruck.accounts;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,10 +10,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.byteshaft.foodtruck.R;
+import com.github.siyamed.shapeimageview.CircularImageView;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageView mImageView;
+    private CircularImageView mImageView;
     private Button mRegisterButton;
     private EditText mUsername;
     private EditText mEmailAddress;
@@ -33,11 +36,13 @@ public class RegisterActivity extends AppCompatActivity {
     private String mProductsString;
     private String mLocationString;
 
+    private static final int SELECT_PICTURE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mImageView = (ImageView) findViewById(R.id.photo);
+        mImageView = (CircularImageView) findViewById(R.id.photo);
         mAddress = (EditText) findViewById(R.id.address);
         mPhoneNumber = (EditText) findViewById(R.id.phone_number);
         mTruckName = (EditText) findViewById(R.id.truck_name);
@@ -48,12 +53,34 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.password);
         mVerifyPassword = (EditText) findViewById(R.id.verify_password);
         mRegisterButton = (Button) findViewById(R.id.register_button);
-        mRegisterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mRegisterButton.setOnClickListener(this);
+        mImageView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.photo:
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,
+                        "Select Picture"), SELECT_PICTURE);
+                break;
+
+            case R.id.register_button:
                 validateEditText();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                mImageView.setImageURI(selectedImageUri);
             }
-        });
+        }
     }
 
     private boolean validateEditText() {

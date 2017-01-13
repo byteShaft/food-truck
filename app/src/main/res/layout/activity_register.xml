@@ -27,7 +27,7 @@
                 android:text="Sign Up"
                 android:textSize="30sp" />
 
-            <ImageView
+            <com.github.siyamed.shapeimageview.CircularImageView
                 android:id="@+id/photo"
                 android:src="@mipmap/ic_launcher"
                 android:layout_width="100dp"
