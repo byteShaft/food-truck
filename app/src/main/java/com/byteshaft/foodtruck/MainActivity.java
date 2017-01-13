@@ -1,5 +1,6 @@
 package com.byteshaft.foodtruck;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.byteshaft.foodtruck.accounts.LoginActivity;
 import com.byteshaft.foodtruck.tabfragment.FavouriteFragment;
 import com.byteshaft.foodtruck.tabfragment.FoodTruckFragment;
 import com.byteshaft.foodtruck.tabfragment.MapFragment;
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, LoginActivity.class));
             return true;
         }
 
