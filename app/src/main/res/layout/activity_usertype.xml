@@ -4,20 +4,22 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.AppCompatButton
-        android:text="Find Food Truck"
+        android:id="@+id/find_truck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:id="@+id/find_truck" />
+        android:text="Find Food Truck"
+        android:theme="@style/AppTheme.Button" />
 
     <android.support.v7.widget.AppCompatButton
-        android:text="Truck Owner"
+        android:id="@+id/truck_owner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/find_truck"
         android:layout_alignLeft="@+id/find_truck"
         android:layout_alignStart="@+id/find_truck"
-        android:id="@+id/truck_owner" />
+        android:layout_below="@+id/find_truck"
+        android:text="Truck Owner"
+        android:theme="@style/AppTheme.Button" />
 </RelativeLayout>

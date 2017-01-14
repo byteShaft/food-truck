@@ -9,4 +9,10 @@
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
         AIzaSyBvZ3MtZpcjmMMOCWsOqFiW-J1ovPez_W4
     </string>
+
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/button_color</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+
 </resources>
