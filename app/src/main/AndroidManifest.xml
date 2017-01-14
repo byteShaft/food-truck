@@ -40,9 +40,12 @@
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".accounts.LoginActivity" />
-        <activity android:name=".accounts.RegisterActivity" />
-        <activity android:name=".accounts.ForgotPasswordActivity"></activity>
+        <activity android:name=".accounts.LoginActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".accounts.RegisterActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".accounts.ForgotPasswordActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".UserTypeActivity"  android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>
