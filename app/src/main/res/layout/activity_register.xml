@@ -27,12 +27,6 @@
                 android:text="Sign Up"
                 android:textSize="30sp" />
 
-            <com.github.siyamed.shapeimageview.CircularImageView
-                android:id="@+id/photo"
-                android:src="@mipmap/ic_launcher"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -62,91 +56,6 @@
                     android:drawablePadding="9dp"
                     android:hint="Email Address"
                     android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:padding="15dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/phone_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
-                    android:drawablePadding="9dp"
-                    android:hint="Phone Number"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:padding="15dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/address"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
-                    android:drawablePadding="9dp"
-                    android:hint="Address"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="15dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/location"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
-                    android:drawablePadding="9dp"
-                    android:hint="Location"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="15dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/truck_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
-                    android:drawablePadding="9dp"
-                    android:hint="Truck Name"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="15dp" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/products"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
-                    android:drawablePadding="9dp"
-                    android:hint="Products"
-                    android:inputType="text"
                     android:maxLines="1"
                     android:padding="15dp" />
 
