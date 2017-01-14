@@ -8,4 +8,9 @@
     <color name="tab_active">#ffffff</color>
     <color name="tab_inactive">#BDBDBD</color>
 
+    /// set buttons color from here
+    
+    <color name="button_color">#2196f3</color>
+    <color name="button_text_color">#ffffff</color>
+
 </resources>

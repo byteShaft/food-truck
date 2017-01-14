@@ -66,6 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
+                android:theme="@style/AppTheme.Button"
                 android:padding="15dp"
                 android:text="Login"
                 android:textSize="14sp" />
@@ -75,6 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
+                android:theme="@style/AppTheme.Button"
                 android:padding="15dp"
                 android:text="Register"
                 android:textSize="14sp" />
