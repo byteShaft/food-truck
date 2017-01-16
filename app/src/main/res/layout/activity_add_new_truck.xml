@@ -3,4 +3,94 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/truck_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawablePadding="8dp"
+            android:hint="Truck Name"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            android:padding="15dp"
+            android:textColorHint="@android:color/darker_gray" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawablePadding="8dp"
+            android:hint="Truck Name"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            android:padding="15dp"
+            android:textColorHint="@android:color/darker_gray" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawablePadding="8dp"
+            android:hint="Contact Number"
+            android:inputType="phone"
+            android:maxLines="1"
+            android:padding="15dp"
+            android:textColorHint="@android:color/darker_gray" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawablePadding="8dp"
+            android:hint="Truck Name"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="15dp"
+            android:textColorHint="@android:color/darker_gray" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawablePadding="8dp"
+            android:hint="Products you provide"
+            android:inputType="textCapWords"
+            android:maxLines="5"
+            android:padding="15dp"
+            android:textColorHint="@android:color/darker_gray" />
+
+    </android.support.design.widget.TextInputLayout>
+
 </RelativeLayout>
