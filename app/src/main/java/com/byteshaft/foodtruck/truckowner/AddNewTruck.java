@@ -16,5 +16,14 @@ public class AddNewTruck extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_truck);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+
     }
 }

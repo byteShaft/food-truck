@@ -30,10 +30,18 @@ public class UserTypeActivity extends Activity implements View.OnClickListener {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_usertype);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
         findTruck = (AppCompatButton) findViewById(R.id.find_truck);
         truckOwner = (AppCompatButton) findViewById(R.id.truck_owner);
         findTruck.setOnClickListener(this);
         truckOwner.setOnClickListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
     }
 
     @Override

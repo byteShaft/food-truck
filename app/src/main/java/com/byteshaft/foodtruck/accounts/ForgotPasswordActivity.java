@@ -24,6 +24,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_forgot_password);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
         mEmail = (EditText) findViewById(R.id.email_address);
         mRecoverButton = (Button) findViewById(R.id.recover);
         mRecoverButton.setOnClickListener(new View.OnClickListener() {
@@ -35,6 +36,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+
     }
 
     public boolean validate() {
