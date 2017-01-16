@@ -21,8 +21,9 @@ public class AppGlobals extends Application {
     public static final String KEY_TOKEN = "token";
     public static final String KEY_USER_LOGIN = "user_login";
     public static final String KEY_USER_ACTIVE = "user_active";
+    public static final String BASE_URL = "http://178.62.35.70/api/";
+    public static final String SERVER_IP = "http://178.62.35.70/";
 
-        public static final String BASE_URL = "http://178.62.35.70/api/";
 
     @Override
     public void onCreate() {

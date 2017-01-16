@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.byteshaft.foodtruck.accounts.CodeConfirmationActivity;
 import com.byteshaft.foodtruck.accounts.LoginActivity;
 import com.byteshaft.foodtruck.customer.MainActivity;
+import com.byteshaft.foodtruck.truckowner.TruckList;
+import com.byteshaft.foodtruck.utils.AppGlobals;
 
 /**
  * Created by s9iper1 on 1/13/17.
@@ -40,7 +43,13 @@ public class UserTypeActivity extends Activity implements View.OnClickListener {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 break;
             case R.id.truck_owner:
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                if (AppGlobals.isUserLoggedIn() && !AppGlobals.isUserActive()) {
+                    startActivity(new Intent(getApplicationContext(), CodeConfirmationActivity.class));
+                } else if (!AppGlobals.isUserLoggedIn()){
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                } else {
+                    startActivity(new Intent(getApplicationContext(), TruckList.class));
+                }
                 break;
         }
     }
