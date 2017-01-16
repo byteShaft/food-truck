@@ -33,6 +33,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private String mEmailAddressString;
     private String mVerifyPasswordString;
     private String mPasswordString;
+    private static RegisterActivity sInstance;
+    public static RegisterActivity getInstance() {
+        return sInstance;
+    }
 
 
     private HttpRequest request;
@@ -41,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        sInstance = this;
         mUsername = (EditText) findViewById(R.id.user_name);
         mEmailAddress = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
@@ -148,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             AppGlobals.saveUserLogin(true);
                             LoginActivity.getInstance().finish();
                             finish();
-                            startActivity(new Intent(this, MainActivity.class));
+                            startActivity(new Intent(this, CodeConfirmationActivity.class));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
