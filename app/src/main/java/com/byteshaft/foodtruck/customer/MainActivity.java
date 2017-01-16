@@ -1,4 +1,4 @@
-package com.byteshaft.foodtruck;
+package com.byteshaft.foodtruck.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.accounts.LoginActivity;
 import com.byteshaft.foodtruck.tabfragment.FavouriteFragment;
 import com.byteshaft.foodtruck.tabfragment.FoodTruckFragment;
