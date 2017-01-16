@@ -1,8 +1,8 @@
 package com.byteshaft.foodtruck.accounts;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,8 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.byteshaft.foodtruck.MainActivity;
 import com.byteshaft.foodtruck.R;
+import com.byteshaft.foodtruck.customer.MainActivity;
+import com.byteshaft.foodtruck.truckowner.TruckList;
 import com.byteshaft.foodtruck.utils.AppGlobals;
 import com.byteshaft.foodtruck.utils.Helpers;
 import com.byteshaft.requests.HttpRequest;
@@ -109,7 +110,7 @@ public class CodeConfirmationActivity extends AppCompatActivity implements
                             LoginActivity.getInstance().finish();
                             RegisterActivity.getInstance().finish();
                             finish();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(), TruckList.class));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
