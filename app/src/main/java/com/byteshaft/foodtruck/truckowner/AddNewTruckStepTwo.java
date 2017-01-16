@@ -45,6 +45,14 @@ public class AddNewTruckStepTwo extends AppCompatActivity implements
         instagramUrl = (EditText) findViewById(R.id.instagram_url);
         foodTruckButton = (AppCompatButton) findViewById(R.id.add_food_truck_button);
         foodTruckButton.setOnClickListener(this);
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras();
+            facebookUrl.setText(bundle.getString("facebook"));
+            websiteUrl.setText(bundle.getString("website"));
+            twitterUrl.setText(bundle.getString("twitter"));
+            instagramUrl.setText(bundle.getString("instagram"));
+            foodTruckButton.setText("Update Food Truck");
+        }
     }
 
     private void addUpdateTruck() {
@@ -52,7 +60,12 @@ public class AddNewTruckStepTwo extends AppCompatActivity implements
         request.setOnReadyStateChangeListener(this);
         request.setOnErrorListener(this);
         String method = "POST";
-        request.open(method, String.format("%suser/trucks", AppGlobals.BASE_URL));
+        String url = String.format("%suser/trucks", AppGlobals.BASE_URL);
+        if (AddNewTruck.getInstance().updateMode) {
+            method = "PUT";
+            url = String.format("%suser/trucks/%s", AppGlobals.BASE_URL, AddNewTruck.getInstance().id);
+        }
+        request.open(method, url);
         request.setRequestHeader("Authorization", "Token " +
                 AppGlobals.getStringFromSharedPreferences(AppGlobals.KEY_TOKEN));
         FormData data = new FormData();
@@ -87,6 +100,7 @@ public class AddNewTruckStepTwo extends AppCompatActivity implements
                 Helpers.dismissProgressDialog();
                 switch (request.getStatus()) {
                     case HttpURLConnection.HTTP_CREATED:
+                    case HttpURLConnection.HTTP_OK:
                         Log.i("TAG", "Truck "+ request.getResponseText());
                         JSONObject jsonObject = null;
                         try {

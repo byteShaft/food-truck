@@ -34,7 +34,6 @@ import android.widget.Toast;
 import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.utils.AppGlobals;
 import com.byteshaft.foodtruck.utils.Helpers;
-import com.byteshaft.foodtruck.utils.SimpleDividerItemDecoration;
 import com.byteshaft.requests.HttpRequest;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -45,6 +44,9 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+
+import static com.byteshaft.foodtruck.R.id.start;
+import static com.byteshaft.foodtruck.R.id.textView;
 
 
 public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyStateChangeListener,
@@ -77,9 +79,27 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.canScrollVertically(LinearLayoutManager.VERTICAL);
         mRecyclerView.setHasFixedSize(true);
-//        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         mAdapter = new CustomAdapter(truckDetails, this);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addOnItemTouchListener(new CustomAdapter(truckDetails, getApplicationContext(),
+                new OnItemClickListener() {
+                    @Override
+                    public void onItem(TruckDetail truckDetail) {
+                        Intent intent = new Intent(getApplicationContext(), AddNewTruck.class);
+                        intent.putExtra("id", truckDetail.getId());
+                        intent.putExtra("name", truckDetail.getTruckName());
+                        intent.putExtra("image", truckDetail.getImageUrl().toString());
+                        intent.putExtra("address", truckDetail.getAddress());
+                        intent.putExtra("location", truckDetail.getLatLng());
+                        intent.putExtra("phone", truckDetail.getContactNumber());
+                        intent.putExtra("products", truckDetail.getProducts());
+                        intent.putExtra("facebook", truckDetail.getFacebookUrl());
+                        intent.putExtra("website", truckDetail.getWebsiteUrl());
+                        intent.putExtra("instagram", truckDetail.getInstagramUrl());
+                        intent.putExtra("twitter", truckDetail.getTwitterUrl());
+                        startActivity(intent);
+                    }
+                }));
         getTruckDetails();
     }
 
@@ -442,12 +462,10 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
             View childView = rv.findChildViewUnder(e.getX(), e.getY());
-//            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-//                mListener.onItem(items.get(rv.getChildPosition(childView)), (TextView)
-//                        rv.findViewHolderForAdapterPosition(rv.getChildPosition(childView)).
-//                                itemView.findViewById(R.id.specific_category_title));
-//                return true;
-//            }
+            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+                mListener.onItem(items.get(rv.getChildPosition(childView)));
+                return true;
+            }
             return false;
         }
 
@@ -463,7 +481,7 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
     }
 
     public interface OnItemClickListener {
-        void onItem(Integer item, TextView textView);
+        void onItem(TruckDetail truckDetail);
     }
 
     // custom viewHolder to access xml elements requires a view in constructor
