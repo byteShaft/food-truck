@@ -39,6 +39,7 @@ public class CodeConfirmationActivity extends AppCompatActivity implements
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setTitle("Code Confirmation");
         setContentView(R.layout.activity_code_confirmation);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
         codeField = (EditText) findViewById(R.id.et_code);
         emailId = AppGlobals.getStringFromSharedPreferences(AppGlobals.KEY_EMAIL);
         System.out.println(emailId);
@@ -122,6 +123,14 @@ public class CodeConfirmationActivity extends AppCompatActivity implements
 
     @Override
     public void onError(HttpRequest request, int readyState, short error, Exception exception) {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
 
     }
 }

@@ -57,6 +57,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".truckowner.AddNewTruck"
+            android:windowSoftInputMode="adjustPan"
+            android:label="Add new truck"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".truckowner.AddNewTruckStepTwo"
+            android:windowSoftInputMode="adjustPan"
+            android:label="Add new truck"
             android:screenOrientation="portrait"/>
         <activity android:name=".truckowner.TruckList"
             android:label="My Truck List"

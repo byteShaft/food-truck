@@ -1,10 +1,20 @@
 package com.byteshaft.foodtruck.truckowner;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +26,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
-import com.byteshaft.foodtruck.accounts.LoginActivity;
 import com.byteshaft.foodtruck.utils.AppGlobals;
 import com.byteshaft.foodtruck.utils.Helpers;
 import com.byteshaft.foodtruck.utils.SimpleDividerItemDecoration;
@@ -45,11 +56,13 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
     private HttpRequest request;
     private ArrayList<TruckDetail> truckDetails;
     private TextView truckTextView;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.owner_truck_list);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
         truckDetails = new ArrayList<>();
         Log.i("TAG" , ""+ AppGlobals.getStringFromSharedPreferences(AppGlobals.KEY_TOKEN));
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -79,12 +92,132 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_new_truck) {
-            startActivity(new Intent(getApplicationContext(), AddNewTruck.class));
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle("Permission Request");
+                alertDialogBuilder.setMessage("Location permission is required to navigate users exactly to your truck. " +
+                        "please grant location permission to proceed.")
+                        .setCancelable(false).setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        ActivityCompat.requestPermissions(TruckList.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_LOCATION);
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
 
-            return true;
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            } else {
+                if (!locationEnabled()) {
+                    // notify user
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setMessage("Location is not enabled");
+                    dialog.setPositiveButton("Turn on", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            // TODO Auto-generated method stub
+                            Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(myIntent);
+                            //get gps
+                        }
+                    });
+                    dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            // TODO Auto-generated method stub
+
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    startActivity(new Intent(getApplicationContext(), AddNewTruck.class));
+
+                }
+
+                return true;
+            }
         }
 
-        return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(item);
+    }
+
+    private boolean locationEnabled() {
+        LocationManager lm = (LocationManager) getApplicationContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        return gps_enabled || network_enabled;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (!locationEnabled()) {
+                        // notify user
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                        dialog.setMessage("Location is not enabled");
+                        dialog.setPositiveButton("Turn on", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                // TODO Auto-generated method stub
+                                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(myIntent);
+                                //get gps
+                            }
+                        });
+                        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
+                        dialog.show();
+                    } else {
+                        startActivity(new Intent(getApplicationContext(), AddNewTruck.class));
+
+                    }
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     private void getTruckDetails() {
@@ -147,6 +280,14 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         Helpers.dismissProgressDialog();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+
+    }
+
     class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
             RecyclerView.OnItemTouchListener {
 
@@ -184,7 +325,7 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             holder.setIsRecyclable(false);
-            TruckDetail truckDetail = items.get(position);
+            final TruckDetail truckDetail = items.get(position);
             viewHolder.truckName.setText(truckDetail.getTruckName());
             viewHolder.truckAddress.setText(truckDetail.getAddress());
             viewHolder.products.setText(truckDetail.getProducts());
@@ -207,6 +348,78 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
 
                         }
                     });
+            viewHolder.facebookButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!truckDetail.getFacebookUrl().contains("http")) {
+                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    newFacebookIntent(truckDetail.getFacebookUrl());
+                }
+            });
+
+            viewHolder.websiteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!truckDetail.getWebsiteUrl().contains("http")) {
+                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent= new Intent(Intent.ACTION_VIEW,Uri.parse(truckDetail.getWebsiteUrl()));
+                    startActivity(intent);
+                }
+            });
+
+            viewHolder.twitterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!truckDetail.getTwitterUrl().contains("http")) {
+                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getTwitterUrl()));
+                    startActivity(intent);
+
+                }
+            });
+
+            viewHolder.instagramButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!truckDetail.getInstagramUrl().contains("http")) {
+                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Uri uri = Uri.parse(truckDetail.getInstagramUrl());
+                    Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+
+                    likeIng.setPackage("com.instagram.android");
+
+                    try {
+                        startActivity(likeIng);
+                    } catch (ActivityNotFoundException e) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(truckDetail.getInstagramUrl())));
+                    }
+
+                }
+            });
+
+        }
+
+        public Intent newFacebookIntent(String url) {
+            Uri uri = Uri.parse(url);
+            try {
+                ApplicationInfo applicationInfo = getPackageManager()
+                        .getApplicationInfo("com.facebook.katana", 0);
+                if (applicationInfo.enabled) {
+                    // http://stackoverflow.com/a/24547437/1048340
+                    uri = Uri.parse("fb://facewebmodal/f?href=" + url);
+                }
+            } catch (PackageManager.NameNotFoundException ignored) {
+            }
+            return new Intent(Intent.ACTION_VIEW, uri);
         }
 
         @Override
@@ -247,6 +460,10 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         public TextView products;
         public ImageView imageView;
         public TextView truckAddress;
+        public ImageButton facebookButton;
+        public ImageButton websiteButton;
+        public ImageButton twitterButton;
+        public ImageButton instagramButton;
 
         public CustomView(View itemView) {
             super(itemView);
@@ -254,6 +471,10 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
             products = (TextView) itemView.findViewById(R.id.products);
             imageView = (ImageView) itemView.findViewById(R.id.image);
             truckAddress = (TextView) itemView.findViewById(R.id.truck_address);
+            facebookButton = (ImageButton) itemView.findViewById(R.id.facebook_button);
+            websiteButton = (ImageButton) itemView.findViewById(R.id.website_button);
+            twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
+            instagramButton = (ImageButton) itemView.findViewById(R.id.instrgram_button);
         }
     }
 }

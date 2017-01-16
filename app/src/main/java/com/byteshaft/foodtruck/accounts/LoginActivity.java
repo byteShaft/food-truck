@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
         sInstance = this;
         mEmail = (EditText) findViewById(R.id.email_address);
         mPassword = (EditText) findViewById(R.id.password);
@@ -57,6 +58,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mRegisterButton.setOnClickListener(this);
         mForgotPasswordTextView = (TextView) findViewById(R.id.tv_forgot_password);
         mForgotPasswordTextView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+
     }
 
     public boolean validate() {
