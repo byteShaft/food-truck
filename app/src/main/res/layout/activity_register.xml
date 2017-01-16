@@ -4,6 +4,7 @@
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/layout_background"
     tools:context="com.byteshaft.foodtruck.accounts.RegisterActivity">
 
     <ScrollView
@@ -13,13 +14,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:gravity="center"
             android:orientation="vertical">
 
 
-            <TextView
+            <com.byteshaft.foodtruck.utils.HeadingTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -106,5 +108,14 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/background_truck"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
 
 </RelativeLayout>
