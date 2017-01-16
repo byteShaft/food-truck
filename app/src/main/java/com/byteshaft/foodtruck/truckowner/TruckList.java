@@ -54,14 +54,20 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
     private CustomView viewHolder;
     private CustomAdapter mAdapter;
     private HttpRequest request;
-    private ArrayList<TruckDetail> truckDetails;
+    public ArrayList<TruckDetail> truckDetails;
     private TextView truckTextView;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
+    private static TruckList sInstance;
+
+    public static TruckList getInstance() {
+        return sInstance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.owner_truck_list);
+        sInstance = this;
         overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
         truckDetails = new ArrayList<>();
         Log.i("TAG" , ""+ AppGlobals.getStringFromSharedPreferences(AppGlobals.KEY_TOKEN));
@@ -71,10 +77,16 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.canScrollVertically(LinearLayoutManager.VERTICAL);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
+//        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         mAdapter = new CustomAdapter(truckDetails, this);
         mRecyclerView.setAdapter(mAdapter);
         getTruckDetails();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

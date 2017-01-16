@@ -1,5 +1,6 @@
 package com.byteshaft.foodtruck.truckowner;
 
+import android.Manifest;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +12,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -22,6 +25,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.utils.Helpers;
@@ -48,7 +52,7 @@ public class AddNewTruck extends AppCompatActivity implements
     private static final int REQUEST_CAMERA = 1212;
     private static final int SELECT_FILE = 1245;
     private File destination;
-    private String imageUrl= "";
+    public String imageUrl= "";
     private Bitmap profilePic;
     private Uri selectedImageUri;
     private AppCompatButton proceedButton;
@@ -62,8 +66,9 @@ public class AddNewTruck extends AppCompatActivity implements
     public double lat;
     public double lng;
     private static AddNewTruck sInstance;
+    private static final int MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 0;
 
-    public AddNewTruck getInstance() {
+    public static AddNewTruck getInstance() {
         return sInstance;
     }
 
@@ -160,6 +165,60 @@ public class AddNewTruck extends AppCompatActivity implements
 
     // Dialog with option to capture image or choose from gallery
     private void selectImage() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Permission Request");
+            alertDialogBuilder.setMessage("Storage permission is required to save the captured image or to select from gallery. please continue to grant it.")
+                    .setCancelable(false).setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                    ActivityCompat.requestPermissions(AddNewTruck.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE);
+                }
+            });
+            alertDialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        } else {
+            showPictureSelectionDialog();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showPictureSelectionDialog();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    private void showPictureSelectionDialog() {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Remove photo", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(AddNewTruck.this);
         builder.setTitle("Add Photo!");
@@ -172,7 +231,7 @@ public class AddNewTruck extends AppCompatActivity implements
                 } else if (items[item].equals("Choose from Library")) {
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
                     startActivityForResult(
                             Intent.createChooser(intent, "Select File"),
@@ -180,7 +239,7 @@ public class AddNewTruck extends AppCompatActivity implements
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 } else if (items[item].equals("Remove photo")) {
-                    truckImage.setImageDrawable(null);
+                    truckImage.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_camera));
                 }
             }
         });
@@ -194,6 +253,18 @@ public class AddNewTruck extends AppCompatActivity implements
                 selectImage();
                 break;
             case R.id.step_two:
+                if (truckName.getText().toString().trim().isEmpty() ||
+                        truckAddress.getText().toString().trim().isEmpty() ||
+                        phoneNumber.getText().toString().trim().isEmpty() ||
+                        products.getText().toString().trim().isEmpty() ||
+                        locationCoordinates.getText().toString().isEmpty()) {
+                    Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (imageUrl.trim().isEmpty()) {
+                    Toast.makeText(this, "please add truck image!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(getApplicationContext(), AddNewTruckStepTwo.class));
                 break;
         }

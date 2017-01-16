@@ -8,14 +8,15 @@
         android:id="@+id/owner_truck_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical" />
+        android:background="@color/layout_background"
+        android:scrollbars="none" />
 
     <com.byteshaft.foodtruck.utils.HeadingTextView
         android:id="@+id/no_truck_text_view"
         android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="No Truck added please add from top menu"
+        android:text="No Food Truck added please add from top menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
