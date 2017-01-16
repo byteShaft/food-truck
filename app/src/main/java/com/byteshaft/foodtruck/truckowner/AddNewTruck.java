@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,11 +35,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import static android.R.attr.editable;
 
 /**
  * Created by s9iper1 on 1/16/17.
@@ -67,6 +72,8 @@ public class AddNewTruck extends AppCompatActivity implements
     public double lng;
     private static AddNewTruck sInstance;
     private static final int MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 0;
+    public boolean updateMode = false;
+    public int id;
 
     public static AddNewTruck getInstance() {
         return sInstance;
@@ -96,7 +103,9 @@ public class AddNewTruck extends AppCompatActivity implements
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mGoogleApiClient.disconnect();
+                if (mGoogleApiClient != null) {
+                    mGoogleApiClient.disconnect();
+                }
 
             }
 
@@ -105,8 +114,38 @@ public class AddNewTruck extends AppCompatActivity implements
 
             }
         });
-        buildGoogleApiClient();
-        mGoogleApiClient.connect();
+        if (getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras();
+            updateMode = true;
+            id = bundle.getInt("id");
+            Log.i("TAG", "" + id);
+            truckName.setText(bundle.getString("name"));
+            truckAddress.setText(bundle.getString("address"));
+            locationCoordinates.setText(bundle.getString("location"));
+            phoneNumber.setText(bundle.getString("phone"));
+            products.setText(bundle.getString("products"));
+            imageUrl = bundle.getString("image");
+            Picasso.with(this)
+                    .load(imageUrl)
+                    .resize(150, 150)
+                    .centerCrop()
+                    .into(truckImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+
+
+                        }
+                    });
+        }
+        if (!updateMode) {
+            buildGoogleApiClient();
+            mGoogleApiClient.connect();
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -265,7 +304,12 @@ public class AddNewTruck extends AppCompatActivity implements
                     Toast.makeText(this, "please add truck image!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                startActivity(new Intent(getApplicationContext(), AddNewTruckStepTwo.class));
+                Intent intent = new Intent(getApplicationContext(), AddNewTruckStepTwo.class);
+                intent.putExtra("facebook", getIntent().getStringExtra("facebook"));
+                intent.putExtra("website", getIntent().getStringExtra("website"));
+                intent.putExtra("instagram", getIntent().getStringExtra("instagram"));
+                intent.putExtra("twitter", getIntent().getStringExtra("twitter"));
+                startActivity(intent);
                 break;
         }
     }
