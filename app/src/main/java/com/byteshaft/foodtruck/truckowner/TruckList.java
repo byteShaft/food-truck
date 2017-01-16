@@ -1,13 +1,20 @@
 package com.byteshaft.foodtruck.truckowner;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +56,7 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
     private HttpRequest request;
     private ArrayList<TruckDetail> truckDetails;
     private TextView truckTextView;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +92,132 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_new_truck) {
-            startActivity(new Intent(getApplicationContext(), AddNewTruck.class));
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle("Permission Request");
+                alertDialogBuilder.setMessage("Location permission is required to navigate users exactly to your truck. " +
+                        "please grant location permission to proceed.")
+                        .setCancelable(false).setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        ActivityCompat.requestPermissions(TruckList.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_LOCATION);
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
 
-            return true;
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            } else {
+                if (!locationEnabled()) {
+                    // notify user
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setMessage("Location is not enabled");
+                    dialog.setPositiveButton("Turn on", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            // TODO Auto-generated method stub
+                            Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(myIntent);
+                            //get gps
+                        }
+                    });
+                    dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            // TODO Auto-generated method stub
+
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    startActivity(new Intent(getApplicationContext(), AddNewTruck.class));
+
+                }
+
+                return true;
+            }
         }
 
-        return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(item);
+    }
+
+    private boolean locationEnabled() {
+        LocationManager lm = (LocationManager) getApplicationContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        return gps_enabled || network_enabled;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (!locationEnabled()) {
+                        // notify user
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                        dialog.setMessage("Location is not enabled");
+                        dialog.setPositiveButton("Turn on", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                // TODO Auto-generated method stub
+                                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(myIntent);
+                                //get gps
+                            }
+                        });
+                        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
+                        dialog.show();
+                    } else {
+                        startActivity(new Intent(getApplicationContext(), AddNewTruck.class));
+
+                    }
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     private void getTruckDetails() {
