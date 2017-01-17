@@ -12,9 +12,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
@@ -42,8 +43,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import static android.R.attr.editable;
 
 /**
  * Created by s9iper1 on 1/16/17.
@@ -74,6 +73,8 @@ public class AddNewTruck extends AppCompatActivity implements
     private static final int MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 0;
     public boolean updateMode = false;
     public int id;
+    private AppCompatButton updateLocation;
+    private TextInputLayout textInputLayout;
 
     public static AddNewTruck getInstance() {
         return sInstance;
@@ -95,6 +96,9 @@ public class AddNewTruck extends AppCompatActivity implements
         phoneNumber = (EditText) findViewById(R.id.phone_number);
         products = (EditText) findViewById(R.id.products);
         locationCoordinates = (EditText) findViewById(R.id.location);
+        updateLocation = (AppCompatButton) findViewById(R.id.update_location);
+        textInputLayout = (TextInputLayout) findViewById(R.id.input_layout);
+        updateLocation.setOnClickListener(this);
         locationCoordinates.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -125,6 +129,7 @@ public class AddNewTruck extends AppCompatActivity implements
             phoneNumber.setText(bundle.getString("phone"));
             products.setText(bundle.getString("products"));
             imageUrl = bundle.getString("image");
+            updateLocation.setVisibility(View.VISIBLE);
             Picasso.with(this)
                     .load(imageUrl)
                     .resize(150, 150)
@@ -141,6 +146,14 @@ public class AddNewTruck extends AppCompatActivity implements
 
                         }
                     });
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.weight = 3.0f;
+            textInputLayout.setLayoutParams(params);
+            LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT);
+            buttonParams.weight = 1.0f;
+            updateLocation.setLayoutParams(buttonParams);
         }
         if (!updateMode) {
             buildGoogleApiClient();
@@ -189,6 +202,7 @@ public class AddNewTruck extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d("TAG", "Location changed called");
         lat = location.getLatitude();
         lng = location.getLongitude();
         locationCoordinates.setText(lat +", "+ lng);
@@ -305,11 +319,18 @@ public class AddNewTruck extends AppCompatActivity implements
                     return;
                 }
                 Intent intent = new Intent(getApplicationContext(), AddNewTruckStepTwo.class);
-                intent.putExtra("facebook", getIntent().getStringExtra("facebook"));
-                intent.putExtra("website", getIntent().getStringExtra("website"));
-                intent.putExtra("instagram", getIntent().getStringExtra("instagram"));
-                intent.putExtra("twitter", getIntent().getStringExtra("twitter"));
+                if (updateMode) {
+                    intent.putExtra("facebook", getIntent().getStringExtra("facebook"));
+                    intent.putExtra("website", getIntent().getStringExtra("website"));
+                    intent.putExtra("instagram", getIntent().getStringExtra("instagram"));
+                    intent.putExtra("twitter", getIntent().getStringExtra("twitter"));
+                }
                 startActivity(intent);
+                break;
+            case R.id.update_location:
+                Toast.makeText(this, "acquiring location", Toast.LENGTH_SHORT).show();
+                buildGoogleApiClient();
+                mGoogleApiClient.connect();
                 break;
         }
     }

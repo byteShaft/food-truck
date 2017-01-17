@@ -14,7 +14,6 @@ public class AppGlobals extends Application {
     private static Context sContext;
     public static Typeface typefaceBold;
     public static Typeface typefaceNormal;
-
     public static final String KEY_FULL_NAME = "full_name";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_USER_ID = "id";
@@ -23,7 +22,6 @@ public class AppGlobals extends Application {
     public static final String KEY_USER_ACTIVE = "user_active";
     public static final String BASE_URL = "http://178.62.35.70/api/";
     public static final String SERVER_IP = "http://178.62.35.70/";
-
 
     @Override
     public void onCreate() {

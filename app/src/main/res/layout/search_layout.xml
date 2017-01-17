@@ -1,24 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/background_dark">
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/search_layout"
+        android:padding="5dp"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
 
     <EditText
         android:id="@+id/search_bar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_marginLeft="2dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="2dp"
         android:background="@android:drawable/edit_text"
-        android:drawableRight="@android:drawable/ic_menu_search"
-        android:hint="Search food truck" />
+        android:hint="Search food truck"
+        android:layout_weight="3.6"/>
+
+    <ImageButton
+        android:id="@+id/search"
+        android:src="@android:drawable/ic_menu_search"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:background="@android:color/transparent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".4"/>
+
+    </LinearLayout>
     
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/truck_list"
-        android:background="@null"
-        android:layout_below="@+id/search_bar"
+        android:background="@color/layout_background"
+        android:layout_below="@+id/search_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+         />
 
 </RelativeLayout>

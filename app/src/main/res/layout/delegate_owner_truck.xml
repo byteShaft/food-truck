@@ -2,6 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/main_layout"
+    android:clickable="true"
+    android:descendantFocusability="afterDescendants"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.CardView
@@ -20,6 +23,7 @@
                 android:text="Truck Name"
                 android:layout_toLeftOf="@+id/image"
                 android:padding="5dp"
+                android:textStyle="bold"
                 android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -39,50 +43,61 @@
                 android:layout_below="@+id/truck_name"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:src="@mipmap/food_truck"
+                android:src="@mipmap/placeholder"
                 android:background="@drawable/image_border"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/truck_address" />
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/truck_address"
                 android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:weightSum="4">
                 <ImageButton
                     android:id="@+id/facebook_button"
                     android:src="@mipmap/facebook"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:descendantFocusability="blocksDescendants"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
 
                 <ImageButton
                     android:id="@+id/website_button"
                     android:src="@mipmap/website"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:descendantFocusability="blocksDescendants"
+                    android:layout_width="50dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_height="50dp" />
 
                 <ImageButton
                     android:id="@+id/twitter_button"
                     android:src="@mipmap/twitter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="50dp"
+                    android:clickable="true"
+                    android:descendantFocusability="blocksDescendants"
+                    android:focusable="true"
+                    android:layout_height="50dp" />
 
                 <ImageButton
                     android:id="@+id/instrgram_button"
                     android:src="@mipmap/instagram"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="50dp"
+                    android:clickable="true"
+                    android:descendantFocusability="blocksDescendants"
+                    android:focusable="true"
+                    android:layout_height="50dp"/>
             </LinearLayout>
 
 
