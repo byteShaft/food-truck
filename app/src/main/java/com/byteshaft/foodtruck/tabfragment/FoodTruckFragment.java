@@ -17,12 +17,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -30,10 +28,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,7 +89,7 @@ public class FoodTruckFragment extends Fragment implements
         }
         mBaseView = inflater.inflate(R.layout.truck_fragment, container, false);
         truckDetails = new ArrayList<TruckDetail>();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Food Trucks");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Food Trucks");
         mRecyclerView = (RecyclerView) mBaseView.findViewById(R.id.truck_list);
         progressBar = (ProgressBar) mBaseView.findViewById(R.id.progress_bar);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()
@@ -101,33 +99,27 @@ public class FoodTruckFragment extends Fragment implements
         mRecyclerView.setHasFixedSize(true);
         customAdapter = new CustomAdapter(truckDetails, getActivity());
         mRecyclerView.setAdapter(customAdapter);
-        mRecyclerView.addOnItemTouchListener(new CustomAdapter(truckDetails, getActivity()
-                .getApplicationContext(),
-                new TruckList.OnItemClickListener() {
-                    @Override
-                    public void onItem(TruckDetail truckDetail) {
-                        Intent intent = new Intent(getActivity().getApplicationContext(), AddNewTruck.class);
-                        intent.putExtra("id", truckDetail.getId());
-                        intent.putExtra("name", truckDetail.getTruckName());
-                        intent.putExtra("image", truckDetail.getImageUrl().toString());
-                        intent.putExtra("address", truckDetail.getAddress());
-                        intent.putExtra("location", truckDetail.getLatLng());
-                        intent.putExtra("phone", truckDetail.getContactNumber());
-                        intent.putExtra("products", truckDetail.getProducts());
-                        intent.putExtra("facebook", truckDetail.getFacebookUrl());
-                        intent.putExtra("website", truckDetail.getWebsiteUrl());
-                        intent.putExtra("instagram", truckDetail.getInstagramUrl());
-                        intent.putExtra("twitter", truckDetail.getTwitterUrl());
-                        startActivity(intent);
-                    }
-                }));
+//        mRecyclerView.addOnItemTouchListener(new CustomAdapter(truckDetails, getActivity()
+//                .getApplicationContext(),
+//                new TruckList.OnItemClickListener() {
+//                    @Override
+//                    public void onItem(TruckDetail truckDetail) {
+//                        Intent intent = new Intent(getActivity().getApplicationContext(), AddNewTruck.class);
+//                        intent.putExtra("id", truckDetail.getId());
+//                        intent.putExtra("name", truckDetail.getTruckName());
+//                        intent.putExtra("image", truckDetail.getImageUrl().toString());
+//                        intent.putExtra("address", truckDetail.getAddress());
+//                        intent.putExtra("location", truckDetail.getLatLng());
+//                        intent.putExtra("phone", truckDetail.getContactNumber());
+//                        intent.putExtra("products", truckDetail.getProducts());
+//                        intent.putExtra("facebook", truckDetail.getFacebookUrl());
+//                        intent.putExtra("website", truckDetail.getWebsiteUrl());
+//                        intent.putExtra("instagram", truckDetail.getInstagramUrl());
+//                        intent.putExtra("twitter", truckDetail.getTwitterUrl());
+//                        startActivity(intent);
+//                    }
+//                }));
         return mBaseView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i("TAG", "onResume");
     }
 
     @Override
@@ -147,6 +139,12 @@ public class FoodTruckFragment extends Fragment implements
                 notifyUser();
             }
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -158,13 +156,13 @@ public class FoodTruckFragment extends Fragment implements
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     System.out.println("True");
-                        if (!locationEnabled()) {
-                            // notify user
-                            notifyUser();
-                        } else {
-                            buildGoogleApiClient();
-                            mGoogleApiClient.connect();
-                        }
+                    if (!locationEnabled()) {
+                        // notify user
+                        notifyUser();
+                    } else {
+                        buildGoogleApiClient();
+                        mGoogleApiClient.connect();
+                    }
 
 
                 } else {
@@ -205,27 +203,42 @@ public class FoodTruckFragment extends Fragment implements
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void stopLocationService() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this);
+        mGoogleApiClient.disconnect();
+    }
+
+    public void startLocationUpdates() {
+        long INTERVAL = 0;
+        long FASTEST_INTERVAL = 0;
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            return;
-        }
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            //place marker at current position
-            //mGoogleMap.clear();
-
-        }
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        startLocationUpdates();
 
     }
 
@@ -246,7 +259,8 @@ public class FoodTruckFragment extends Fragment implements
         lat = location.getLatitude();
         lng = location.getLongitude();
         counter++;
-        if (counter == 3) {
+        if (counter == 2) {
+            stopLocationService();
             getTrucksByLocation(lat+","+lng);
         }
     }
@@ -360,7 +374,7 @@ public class FoodTruckFragment extends Fragment implements
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.delegate_owner_truck, parent, false);
+                    R.layout.delegate_truck_fragment_by_location, parent, false);
             viewHolder = new CustomView(view);
             return viewHolder;
         }
@@ -375,6 +389,7 @@ public class FoodTruckFragment extends Fragment implements
             viewHolder.truckName.setTypeface(AppGlobals.typefaceNormal);
             viewHolder.products.setTypeface(AppGlobals.typefaceNormal);
             viewHolder.truckAddress.setTypeface(AppGlobals.typefaceNormal);
+            viewHolder.ratingBar.setRating(Float.parseFloat(truckDetail.getRating()));
             Picasso.with(mActivity)
                     .load(truckDetail.getImageUrl())
                     .resize(150, 150)
@@ -395,7 +410,7 @@ public class FoodTruckFragment extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     if (!truckDetail.getFacebookUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -405,7 +420,7 @@ public class FoodTruckFragment extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     if (!truckDetail.getWebsiteUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getWebsiteUrl()));
@@ -417,7 +432,7 @@ public class FoodTruckFragment extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     if (!truckDetail.getTwitterUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getTwitterUrl()));
@@ -430,7 +445,7 @@ public class FoodTruckFragment extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     if (!truckDetail.getInstagramUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Uri uri = Uri.parse(truckDetail.getInstagramUrl());
@@ -490,6 +505,7 @@ public class FoodTruckFragment extends Fragment implements
         public ImageButton websiteButton;
         public ImageButton twitterButton;
         public ImageButton instagramButton;
+        public RatingBar ratingBar;
 
         public CustomView(View itemView) {
             super(itemView);
@@ -501,6 +517,7 @@ public class FoodTruckFragment extends Fragment implements
             websiteButton = (ImageButton) itemView.findViewById(R.id.website_button);
             twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
             instagramButton = (ImageButton) itemView.findViewById(R.id.instrgram_button);
+            ratingBar = (RatingBar) itemView.findViewById(R.id.rating);
         }
     }
 }

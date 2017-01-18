@@ -79,26 +79,26 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
         mRecyclerView.setHasFixedSize(true);
         customAdapter = new CustomAdapter(truckDetails, getActivity());
         mRecyclerView.setAdapter(customAdapter);
-        mRecyclerView.addOnItemTouchListener(new CustomAdapter(truckDetails, getActivity()
-                .getApplicationContext(),
-                new TruckList.OnItemClickListener() {
-                    @Override
-                    public void onItem(TruckDetail truckDetail) {
-                        Intent intent = new Intent(getActivity().getApplicationContext(), AddNewTruck.class);
-                        intent.putExtra("id", truckDetail.getId());
-                        intent.putExtra("name", truckDetail.getTruckName());
-                        intent.putExtra("image", truckDetail.getImageUrl().toString());
-                        intent.putExtra("address", truckDetail.getAddress());
-                        intent.putExtra("location", truckDetail.getLatLng());
-                        intent.putExtra("phone", truckDetail.getContactNumber());
-                        intent.putExtra("products", truckDetail.getProducts());
-                        intent.putExtra("facebook", truckDetail.getFacebookUrl());
-                        intent.putExtra("website", truckDetail.getWebsiteUrl());
-                        intent.putExtra("instagram", truckDetail.getInstagramUrl());
-                        intent.putExtra("twitter", truckDetail.getTwitterUrl());
-                        startActivity(intent);
-                    }
-                }));
+//        mRecyclerView.addOnItemTouchListener(new CustomAdapter(truckDetails, getActivity()
+//                .getApplicationContext(),
+//                new TruckList.OnItemClickListener() {
+//                    @Override
+//                    public void onItem(TruckDetail truckDetail) {
+//                        Intent intent = new Intent(getActivity().getApplicationContext(), AddNewTruck.class);
+//                        intent.putExtra("id", truckDetail.getId());
+//                        intent.putExtra("name", truckDetail.getTruckName());
+//                        intent.putExtra("image", truckDetail.getImageUrl().toString());
+//                        intent.putExtra("address", truckDetail.getAddress());
+//                        intent.putExtra("location", truckDetail.getLatLng());
+//                        intent.putExtra("phone", truckDetail.getContactNumber());
+//                        intent.putExtra("products", truckDetail.getProducts());
+//                        intent.putExtra("facebook", truckDetail.getFacebookUrl());
+//                        intent.putExtra("website", truckDetail.getWebsiteUrl());
+//                        intent.putExtra("instagram", truckDetail.getInstagramUrl());
+//                        intent.putExtra("twitter", truckDetail.getTwitterUrl());
+//                        startActivity(intent);
+//                    }
+//                }));
         return mBaseView;
     }
 
@@ -228,7 +228,7 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.delegate_owner_truck, parent, false);
+                    R.layout.delegate_truck_fragment_by_location, parent, false);
             viewHolder = new CustomView(view);
             return viewHolder;
         }
@@ -240,7 +240,7 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
             viewHolder.truckName.setText(truckDetail.getTruckName());
             viewHolder.truckAddress.setText(truckDetail.getAddress());
             String highLightedText = truckDetail.getProducts().replaceAll(searchBar.getText().toString()
-                    ,"<font color='#a9a9a9'>"+searchBar.getText().toString()+"</font>");
+                    ,"<font color='#000000'>"+searchBar.getText().toString()+"</font>");
             viewHolder.products.setText(Html.fromHtml(highLightedText));
             viewHolder.truckName.setTypeface(AppGlobals.typefaceNormal);
             viewHolder.products.setTypeface(AppGlobals.typefaceNormal);
@@ -265,7 +265,7 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
                 @Override
                 public void onClick(View view) {
                     if (!truckDetail.getFacebookUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -275,7 +275,7 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
                 @Override
                 public void onClick(View view) {
                     if (!truckDetail.getWebsiteUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getWebsiteUrl()));
@@ -287,7 +287,7 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
                 @Override
                 public void onClick(View view) {
                     if (!truckDetail.getTwitterUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getTwitterUrl()));
@@ -300,7 +300,7 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
                 @Override
                 public void onClick(View view) {
                     if (!truckDetail.getInstagramUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Uri uri = Uri.parse(truckDetail.getInstagramUrl());
