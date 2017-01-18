@@ -75,6 +75,7 @@ public class AddNewTruck extends AppCompatActivity implements
     public int id;
     private AppCompatButton updateLocation;
     private TextInputLayout textInputLayout;
+    private int locationCounter = 0;
 
     public static AddNewTruck getInstance() {
         return sInstance;
@@ -171,23 +172,39 @@ public class AddNewTruck extends AppCompatActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        startLocationUpdates();
+    }
+
+    public void stopLocationService() {
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    public void startLocationUpdates() {
+        long INTERVAL = 0;
+        long FASTEST_INTERVAL = 0;
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            //place marker at current position
-            //mGoogleMap.clear();
-
-        }
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
     }
 
     @Override
@@ -205,12 +222,16 @@ public class AddNewTruck extends AppCompatActivity implements
         Log.d("TAG", "Location changed called");
         lat = location.getLatitude();
         lng = location.getLongitude();
-        locationCoordinates.setText(lat +", "+ lng);
+        locationCounter++;
+        if (locationCounter == 2) {
+            locationCoordinates.setText(lat + ", " + lng);
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        stopLocationService();
         finish();
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
 
@@ -318,6 +339,7 @@ public class AddNewTruck extends AppCompatActivity implements
                     Toast.makeText(this, "please add truck image!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                stopLocationService();
                 Intent intent = new Intent(getApplicationContext(), AddNewTruckStepTwo.class);
                 if (updateMode) {
                     intent.putExtra("facebook", getIntent().getStringExtra("facebook"));
