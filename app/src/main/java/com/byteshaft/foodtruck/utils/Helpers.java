@@ -2,8 +2,10 @@ package com.byteshaft.foodtruck.utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.LocationManager;
 
 /**
  * Created by shahid on 14/01/2017.
@@ -43,5 +45,24 @@ public class Helpers {
         options.inJustDecodeBounds = false;
         bm = BitmapFactory.decodeFile(selectedImagePath, options);
         return bm;
+    }
+
+    public static boolean locationEnabled() {
+        LocationManager lm = (LocationManager) AppGlobals.getContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        return gps_enabled || network_enabled;
     }
 }

@@ -12,8 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -21,7 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,7 +33,6 @@ import com.byteshaft.foodtruck.truckowner.AddNewTruck;
 import com.byteshaft.foodtruck.truckowner.TruckDetail;
 import com.byteshaft.foodtruck.truckowner.TruckList;
 import com.byteshaft.foodtruck.utils.AppGlobals;
-import com.byteshaft.foodtruck.utils.Helpers;
 import com.byteshaft.requests.HttpRequest;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -46,18 +44,18 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
-public class SearchFragment extends Fragment implements HttpRequest.OnReadyStateChangeListener, HttpRequest.OnErrorListener {
+public class SearchFragment extends Fragment implements HttpRequest.OnReadyStateChangeListener, HttpRequest.OnErrorListener, View.OnClickListener {
 
     private View mBaseView;
     private EditText searchBar;
     private RecyclerView mRecyclerView;
-    private ArrayAdapter<String> listAdapter;
     private ProgressBar progressBar;
     private CustomAdapter customAdapter;
     private CustomView viewHolder;
     private HttpRequest request;
     private String nextUrl;
     private ArrayList<TruckDetail> truckDetails;
+    private ImageButton search;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,12 +70,15 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
         mRecyclerView = (RecyclerView) mBaseView.findViewById(R.id.truck_list);
         searchBar = (EditText) mBaseView.findViewById(R.id.search_bar);
         progressBar = (ProgressBar) mBaseView.findViewById(R.id.progress_bar);
+        search = (ImageButton) mBaseView.findViewById(R.id.search);
+        search.setOnClickListener(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()
                 .getApplicationContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.canScrollVertically(LinearLayoutManager.VERTICAL);
         mRecyclerView.setHasFixedSize(true);
-//        mRecyclerView.setAdapter();
+        customAdapter = new CustomAdapter(truckDetails, getActivity());
+        mRecyclerView.setAdapter(customAdapter);
         mRecyclerView.addOnItemTouchListener(new CustomAdapter(truckDetails, getActivity()
                 .getApplicationContext(),
                 new TruckList.OnItemClickListener() {
@@ -98,26 +99,6 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
                         startActivity(intent);
                     }
                 }));
-//        listAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-//                android.R.layout.simple_list_item_1, android.R.id.text1, listViewAdapterContent);
-//        truckList.setAdapter(listAdapter);
-
-        searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                listAdapter.getFilter().filter(charSequence);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
         return mBaseView;
     }
 
@@ -125,16 +106,16 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
         request = new HttpRequest(getActivity());
         request.setOnReadyStateChangeListener(this);
         request.setOnErrorListener(this);
-        request.open("GET", String.format("%strucks/filter?name=%s", AppGlobals.BASE_URL, search));
+        request.open("GET", String.format("%strucks/filter?product=%s", AppGlobals.BASE_URL, search));
         request.send();
-        Helpers.showProgressDialog(getActivity(), "Fetching truck details");
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onReadyStateChange(HttpRequest request, int readyState) {
         switch (readyState) {
             case HttpRequest.STATE_DONE:
-                Helpers.dismissProgressDialog();
+                progressBar.setVisibility(View.GONE);
                 switch (request.getStatus()) {
                     case HttpURLConnection.HTTP_OK:
                         Log.i("TAG", "Truck "+ request.getResponseText());
@@ -177,7 +158,7 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
 
     @Override
     public void onError(HttpRequest request, int readyState, short error, Exception exception) {
-        Helpers.dismissProgressDialog();
+        progressBar.setVisibility(View.GONE);
     }
 
     public void setFullscreen(Activity activity) {
@@ -198,6 +179,24 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
 
     public static boolean isImmersiveAvailable() {
         return android.os.Build.VERSION.SDK_INT >= 19;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.search:
+                if (searchBar.getText().toString().trim().isEmpty()) {
+                    return;
+                }
+                View v = getActivity().getCurrentFocus();
+                if (v != null) {
+                    InputMethodManager imm = (InputMethodManager)
+                            getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+                getTruckDetails(searchBar.getText().toString());
+                break;
+        }
     }
 
     class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
@@ -240,7 +239,9 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
             final TruckDetail truckDetail = items.get(position);
             viewHolder.truckName.setText(truckDetail.getTruckName());
             viewHolder.truckAddress.setText(truckDetail.getAddress());
-            viewHolder.products.setText(truckDetail.getProducts());
+            String highLightedText = truckDetail.getProducts().replaceAll(searchBar.getText().toString()
+                    ,"<font color='#a9a9a9'>"+searchBar.getText().toString()+"</font>");
+            viewHolder.products.setText(Html.fromHtml(highLightedText));
             viewHolder.truckName.setTypeface(AppGlobals.typefaceNormal);
             viewHolder.products.setTypeface(AppGlobals.typefaceNormal);
             viewHolder.truckAddress.setTypeface(AppGlobals.typefaceNormal);
