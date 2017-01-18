@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -28,10 +29,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
+import com.byteshaft.foodtruck.accounts.LoginActivity;
 import com.byteshaft.foodtruck.utils.AppGlobals;
 import com.byteshaft.foodtruck.utils.Helpers;
 import com.byteshaft.requests.HttpRequest;
@@ -45,9 +48,6 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
-import static com.byteshaft.foodtruck.R.id.start;
-import static com.byteshaft.foodtruck.R.id.textView;
-
 
 public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyStateChangeListener,
         HttpRequest.OnErrorListener {
@@ -60,6 +60,7 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
     private TextView truckTextView;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private static TruckList sInstance;
+    private String nextUrl;
 
     public static TruckList getInstance() {
         return sInstance;
@@ -81,25 +82,25 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new CustomAdapter(truckDetails, this);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addOnItemTouchListener(new CustomAdapter(truckDetails, getApplicationContext(),
-                new OnItemClickListener() {
-                    @Override
-                    public void onItem(TruckDetail truckDetail) {
-                        Intent intent = new Intent(getApplicationContext(), AddNewTruck.class);
-                        intent.putExtra("id", truckDetail.getId());
-                        intent.putExtra("name", truckDetail.getTruckName());
-                        intent.putExtra("image", truckDetail.getImageUrl().toString());
-                        intent.putExtra("address", truckDetail.getAddress());
-                        intent.putExtra("location", truckDetail.getLatLng());
-                        intent.putExtra("phone", truckDetail.getContactNumber());
-                        intent.putExtra("products", truckDetail.getProducts());
-                        intent.putExtra("facebook", truckDetail.getFacebookUrl());
-                        intent.putExtra("website", truckDetail.getWebsiteUrl());
-                        intent.putExtra("instagram", truckDetail.getInstagramUrl());
-                        intent.putExtra("twitter", truckDetail.getTwitterUrl());
-                        startActivity(intent);
-                    }
-                }));
+//        mRecyclerView.addOnItemTouchListener(new CustomAdapter(truckDetails, getApplicationContext(),
+//                new OnItemClickListener() {
+//                    @Override
+//                    public void onItem(TruckDetail truckDetail) {
+//                        Intent intent = new Intent(getApplicationContext(), AddNewTruck.class);
+//                        intent.putExtra("id", truckDetail.getId());
+//                        intent.putExtra("name", truckDetail.getTruckName());
+//                        intent.putExtra("image", truckDetail.getImageUrl().toString());
+//                        intent.putExtra("address", truckDetail.getAddress());
+//                        intent.putExtra("location", truckDetail.getLatLng());
+//                        intent.putExtra("phone", truckDetail.getContactNumber());
+//                        intent.putExtra("products", truckDetail.getProducts());
+//                        intent.putExtra("facebook", truckDetail.getFacebookUrl());
+//                        intent.putExtra("website", truckDetail.getWebsiteUrl());
+//                        intent.putExtra("instagram", truckDetail.getInstagramUrl());
+//                        intent.putExtra("twitter", truckDetail.getTwitterUrl());
+//                        startActivity(intent);
+//                    }
+//                }));
         getTruckDetails();
     }
 
@@ -178,6 +179,27 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
 
                 return true;
             }
+        } else if (id == R.id.action_logout) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Confirmation");
+            alertDialogBuilder.setMessage("Do you really want to logout?").setCancelable(false).setPositiveButton("Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            SharedPreferences sharedpreferences = AppGlobals.getPreferenceManager();
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.clear();
+                            editor.commit();
+                            finish();
+                        }
+                    });
+            alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }
 
             return super.onOptionsItemSelected(item);
@@ -272,7 +294,9 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
                     case HttpURLConnection.HTTP_OK:
                     Log.i("TAG", "Truck "+ request.getResponseText());
                         try {
-                            JSONArray jsonArray = new JSONArray(request.getResponseText());
+                            JSONObject mainData = new JSONObject(request.getResponseText());
+                            nextUrl = mainData.getString("next");
+                            JSONArray jsonArray = mainData.getJSONArray("results");
                             if (jsonArray.length() > 0) {
 
                             } else {
@@ -357,8 +381,10 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             holder.setIsRecyclable(false);
-            final TruckDetail truckDetail = items.get(position);
-            viewHolder.truckName.setText(truckDetail.getTruckName());
+            TruckDetail truckDetail = items.get(position);
+            String upperString = truckDetail.getTruckName().substring(0,1).toUpperCase() +
+                    truckDetail.getTruckName().substring(1);
+            viewHolder.truckName.setText(upperString);
             viewHolder.truckAddress.setText(truckDetail.getAddress());
             viewHolder.products.setText(truckDetail.getProducts());
             viewHolder.truckName.setTypeface(AppGlobals.typefaceNormal);
@@ -380,78 +406,26 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
 
                         }
                     });
-            viewHolder.facebookButton.setOnClickListener(new View.OnClickListener() {
+            viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!truckDetail.getFacebookUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    newFacebookIntent(truckDetail.getFacebookUrl());
-                }
-            });
-
-            viewHolder.websiteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!truckDetail.getWebsiteUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Intent intent= new Intent(Intent.ACTION_VIEW,Uri.parse(truckDetail.getWebsiteUrl()));
+                    TruckDetail truckDetail = items.get(position);
+                    Intent intent = new Intent(getApplicationContext(), AddNewTruck.class);
+                    intent.putExtra("id", truckDetail.getId());
+                    intent.putExtra("name", truckDetail.getTruckName());
+                    intent.putExtra("image", truckDetail.getImageUrl().toString());
+                    intent.putExtra("address", truckDetail.getAddress());
+                    intent.putExtra("location", truckDetail.getLatLng());
+                    intent.putExtra("phone", truckDetail.getContactNumber());
+                    intent.putExtra("products", truckDetail.getProducts());
+                    intent.putExtra("facebook", truckDetail.getFacebookUrl());
+                    intent.putExtra("website", truckDetail.getWebsiteUrl());
+                    intent.putExtra("instagram", truckDetail.getInstagramUrl());
+                    intent.putExtra("twitter", truckDetail.getTwitterUrl());
                     startActivity(intent);
                 }
             });
 
-            viewHolder.twitterButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!truckDetail.getTwitterUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getTwitterUrl()));
-                    startActivity(intent);
-
-                }
-            });
-
-            viewHolder.instagramButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!truckDetail.getInstagramUrl().contains("http")) {
-                        Toast.makeText(mActivity, "url not valid", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Uri uri = Uri.parse(truckDetail.getInstagramUrl());
-                    Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
-
-                    likeIng.setPackage("com.instagram.android");
-
-                    try {
-                        startActivity(likeIng);
-                    } catch (ActivityNotFoundException e) {
-                        startActivity(new Intent(Intent.ACTION_VIEW,
-                                Uri.parse(truckDetail.getInstagramUrl())));
-                    }
-
-                }
-            });
-
-        }
-
-        public Intent newFacebookIntent(String url) {
-            Uri uri = Uri.parse(url);
-            try {
-                ApplicationInfo applicationInfo = getPackageManager()
-                        .getApplicationInfo("com.facebook.katana", 0);
-                if (applicationInfo.enabled) {
-                    // http://stackoverflow.com/a/24547437/1048340
-                    uri = Uri.parse("fb://facewebmodal/f?href=" + url);
-                }
-            } catch (PackageManager.NameNotFoundException ignored) {
-            }
-            return new Intent(Intent.ACTION_VIEW, uri);
         }
 
         @Override
@@ -462,10 +436,15 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
             View childView = rv.findChildViewUnder(e.getX(), e.getY());
-            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-                mListener.onItem(items.get(rv.getChildPosition(childView)));
-                return true;
-            }
+//            Log.i("TAG","Image button"+ childView.toString());
+//            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+//                if (childView instanceof ImageButton) {
+//
+//                } else {
+//                    mListener.onItem(items.get(rv.getChildPosition(childView)));
+//                }
+//                return true;
+//            }
             return false;
         }
 
@@ -485,7 +464,7 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
     }
 
     // custom viewHolder to access xml elements requires a view in constructor
-    public static class CustomView extends RecyclerView.ViewHolder {
+    public class CustomView extends RecyclerView.ViewHolder {
         public TextView truckName;
         public TextView products;
         public ImageView imageView;
@@ -494,6 +473,7 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
         public ImageButton websiteButton;
         public ImageButton twitterButton;
         public ImageButton instagramButton;
+        private RelativeLayout relativeLayout;
 
         public CustomView(View itemView) {
             super(itemView);
@@ -505,6 +485,83 @@ public class TruckList extends AppCompatActivity implements HttpRequest.OnReadyS
             websiteButton = (ImageButton) itemView.findViewById(R.id.website_button);
             twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
             instagramButton = (ImageButton) itemView.findViewById(R.id.instrgram_button);
+            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.main_layout);
+            facebookButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("TAG", "Click");
+                    TruckDetail truckDetail = truckDetails.get(getAdapterPosition());
+                    if (!truckDetail.getFacebookUrl().contains("http")) {
+                        Toast.makeText(TruckList.this, "url not valid", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    newFacebookIntent(truckDetail.getFacebookUrl());
+                }
+            });
+
+            websiteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TruckDetail truckDetail = truckDetails.get(getAdapterPosition());
+                    if (!truckDetail.getWebsiteUrl().contains("http")) {
+                        Toast.makeText(TruckList.this, "url not valid", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent= new Intent(Intent.ACTION_VIEW,Uri.parse(truckDetail.getWebsiteUrl()));
+                    startActivity(intent);
+                }
+            });
+
+            twitterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TruckDetail truckDetail = truckDetails.get(getAdapterPosition());
+                    if (!truckDetail.getTwitterUrl().contains("http")) {
+                        Toast.makeText(TruckList.this, "url not valid", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getTwitterUrl()));
+                    startActivity(intent);
+
+                }
+            });
+
+            instagramButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TruckDetail truckDetail = truckDetails.get(getAdapterPosition());
+                    if (!truckDetail.getInstagramUrl().contains("http")) {
+                        Toast.makeText(TruckList.this, "url not valid", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Uri uri = Uri.parse(truckDetail.getInstagramUrl());
+                    Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+
+                    likeIng.setPackage("com.instagram.android");
+
+                    try {
+                        startActivity(likeIng);
+                    } catch (ActivityNotFoundException e) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(truckDetail.getInstagramUrl())));
+                    }
+
+                }
+            });
         }
+    }
+
+    public Intent newFacebookIntent(String url) {
+        Uri uri = Uri.parse(url);
+        try {
+            ApplicationInfo applicationInfo = getPackageManager()
+                    .getApplicationInfo("com.facebook.katana", 0);
+            if (applicationInfo.enabled) {
+                // http://stackoverflow.com/a/24547437/1048340
+                uri = Uri.parse("fb://facewebmodal/f?href=" + url);
+            }
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        return new Intent(Intent.ACTION_VIEW, uri);
     }
 }

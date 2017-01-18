@@ -79,8 +79,10 @@ public class AddNewTruckStepTwo extends AppCompatActivity implements
                 AddNewTruck.getInstance().phoneNumber.getText().toString());
         data.append(FormData.TYPE_CONTENT_TEXT, "products",
                 AddNewTruck.getInstance().truckName.getText().toString());
-        data.append(FormData.TYPE_CONTENT_FILE, "photo",
-                AddNewTruck.getInstance().imageUrl);
+        if (!AddNewTruck.getInstance().imageUrl.contains("http")) {
+            data.append(FormData.TYPE_CONTENT_FILE, "photo",
+                    AddNewTruck.getInstance().imageUrl);
+        }
         data.append(FormData.TYPE_CONTENT_TEXT, "facebook",
                 facebookUrl.getText().toString());
         data.append(FormData.TYPE_CONTENT_TEXT, "website",
