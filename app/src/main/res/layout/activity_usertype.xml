@@ -4,42 +4,43 @@
     android:layout_height="match_parent"
     android:background="@color/layout_background">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:src="@mipmap/splash_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="200dp"
-        android:minWidth="200dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
-
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/find_truck"
-        android:layout_below="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/icon"
         android:layout_centerVertical="true"
-        android:text="Find Food Truck"
-        android:padding="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:padding="20dp"
+        android:text="Find Food Truck"
         android:theme="@style/AppTheme.Button" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/truck_owner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:layout_below="@+id/find_truck"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/find_truck"
+        android:padding="20dp"
         android:text="Truck Owner"
         android:theme="@style/AppTheme.Button" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="88dp"
+        android:minHeight="200dp"
+        android:minWidth="200dp"
+        android:src="@mipmap/splash_icon" />
 </RelativeLayout>
