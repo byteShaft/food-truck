@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
+import com.byteshaft.foodtruck.customer.MainActivity;
 import com.byteshaft.foodtruck.truckowner.AddNewTruck;
 import com.byteshaft.foodtruck.truckowner.TruckDetail;
 import com.byteshaft.foodtruck.truckowner.TruckList;
@@ -65,6 +66,8 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        MainActivity.getInstance().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         mBaseView = inflater.inflate(R.layout.search_layout, container, false);
         truckDetails = new ArrayList<>();
         mRecyclerView = (RecyclerView) mBaseView.findViewById(R.id.truck_list);
