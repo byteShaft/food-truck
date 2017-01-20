@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_code_confirmation"
@@ -36,7 +37,6 @@
             android:maxLines="1"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray" />
-
 
         <Button
             android:id="@+id/button_activate_account"

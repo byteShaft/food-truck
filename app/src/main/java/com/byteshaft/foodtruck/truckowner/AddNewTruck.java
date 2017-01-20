@@ -176,7 +176,7 @@ public class AddNewTruck extends AppCompatActivity implements
     }
 
     public void stopLocationService() {
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient.isConnected() && mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mGoogleApiClient, this);
             mGoogleApiClient.disconnect();

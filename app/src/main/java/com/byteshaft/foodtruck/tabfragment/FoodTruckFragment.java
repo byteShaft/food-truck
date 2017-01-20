@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
+import com.byteshaft.foodtruck.customer.MainActivity;
 import com.byteshaft.foodtruck.truckowner.AddNewTruck;
 import com.byteshaft.foodtruck.truckowner.TruckDetail;
 import com.byteshaft.foodtruck.truckowner.TruckList;
@@ -81,14 +82,19 @@ public class FoodTruckFragment extends Fragment implements
     public double lng;
     private int counter = 0;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
+    private static final int ENABLE_LOCATION = 1;
+    private static boolean foreground = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (!((AppCompatActivity) getActivity()).getSupportActionBar().isShowing()) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         }
+        MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        MainActivity.getInstance().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         mBaseView = inflater.inflate(R.layout.truck_fragment, container, false);
         truckDetails = new ArrayList<TruckDetail>();
+        foreground = true;
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Food Trucks");
         mRecyclerView = (RecyclerView) mBaseView.findViewById(R.id.truck_list);
         progressBar = (ProgressBar) mBaseView.findViewById(R.id.progress_bar);
@@ -145,6 +151,13 @@ public class FoodTruckFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        foreground = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        foreground = false;
     }
 
     @Override
@@ -182,7 +195,7 @@ public class FoodTruckFragment extends Fragment implements
             public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                 // TODO Auto-generated method stub
                 Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(myIntent);
+                startActivityForResult(myIntent, ENABLE_LOCATION);
                 //get gps
             }
         });
@@ -195,6 +208,19 @@ public class FoodTruckFragment extends Fragment implements
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ENABLE_LOCATION:
+                if (locationEnabled()) {
+                    buildGoogleApiClient();
+                    mGoogleApiClient.connect();
+                }
+                break;
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -259,7 +285,7 @@ public class FoodTruckFragment extends Fragment implements
         lat = location.getLatitude();
         lng = location.getLongitude();
         counter++;
-        if (counter == 2) {
+        if (counter >= 2) {
             stopLocationService();
             getTrucksByLocation(lat+","+lng);
         }
@@ -267,12 +293,14 @@ public class FoodTruckFragment extends Fragment implements
 
 
     private void getTrucksByLocation(String search) {
-        request = new HttpRequest(getActivity());
-        request.setOnReadyStateChangeListener(this);
-        request.setOnErrorListener(this);
-        request.open("GET", String.format("%strucks/filter-by-location?base_location=%s", AppGlobals.BASE_URL, search));
-        request.send();
-        progressBar.setVisibility(View.VISIBLE);
+        if (foreground) {
+            request = new HttpRequest(getActivity());
+            request.setOnReadyStateChangeListener(this);
+            request.setOnErrorListener(this);
+            request.open("GET", String.format("%strucks/filter-by-location?base_location=%s", AppGlobals.BASE_URL, search));
+            request.send();
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
