@@ -4,14 +4,15 @@
     android:id="@+id/activity_code_confirmation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/truck_background"
     tools:context="com.byteshaft.foodtruck.accounts.CodeConfirmationActivity">
 
     <RelativeLayout
-        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="20dp">
 
         <com.byteshaft.foodtruck.utils.HeadingTextView
             android:id="@+id/heading"
@@ -23,32 +24,27 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/et_layout"
+
+        <EditText
+            android:id="@+id/et_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/heading"
-            android:layout_marginTop="20dp">
-
-            <EditText
-                android:id="@+id/et_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter confirmation code.."
-                android:inputType="number"
-                android:maxLines="1"
-                android:textColorHint="@android:color/darker_gray" />
-
-        </android.support.design.widget.TextInputLayout>
+            android:layout_marginTop="10dp"
+            android:hint="Enter confirmation code.."
+            android:inputType="number"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray" />
 
 
         <Button
             android:id="@+id/button_activate_account"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_below="@+id/et_code"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_below="@+id/et_layout"
             android:layout_marginTop="18dp"
             android:padding="15dp"
             android:text="Activate Account"
