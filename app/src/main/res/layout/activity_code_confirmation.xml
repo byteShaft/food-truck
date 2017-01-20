@@ -37,7 +37,7 @@
             android:maxLines="1"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray" />
-        
+
         <Button
             android:id="@+id/button_activate_account"
             android:layout_width="match_parent"
