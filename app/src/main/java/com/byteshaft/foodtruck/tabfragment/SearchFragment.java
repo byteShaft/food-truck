@@ -130,6 +130,7 @@ public class SearchFragment extends Fragment implements HttpRequest.OnReadyState
 
                             } else {
                                 mRecyclerView.setVisibility(View.GONE);
+                                Toast.makeText(getActivity(), "search result empty", Toast.LENGTH_SHORT).show();
                             }
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
