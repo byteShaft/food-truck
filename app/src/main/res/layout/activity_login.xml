@@ -4,7 +4,7 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/truck_background"
+    android:background="@mipmap/new_design"
     tools:context="com.byteshaft.foodtruck.accounts.LoginActivity">
 
     <ScrollView
@@ -25,7 +25,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="50dp"
                 android:text="Sign In"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="30sp" />
 
 
@@ -39,7 +39,7 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:padding="15dp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray" />
 
             <EditText
@@ -52,7 +52,7 @@
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:padding="15dp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray" />
 
             <Button
@@ -71,7 +71,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="OR"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="italic" />
 
@@ -93,7 +93,7 @@
                 android:layout_marginTop="30dp"
                 android:paddingBottom="50dp"
                 android:text="Forgot Password?"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="14sp"
                 android:textStyle="italic" />
 
