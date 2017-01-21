@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView mForgotPasswordTextView;
     private String mPasswordString;
     private String mEmailString;
-
     private HttpRequest request;
 
     private static LoginActivity sInstance;
