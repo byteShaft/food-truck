@@ -27,7 +27,7 @@ public class FavouriteFragment extends Fragment {
         MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         MainActivity.getInstance().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         mBaseView = inflater.inflate(R.layout.favourite_fragment, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Favourites");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favourites");
         return mBaseView;
     }
 }
