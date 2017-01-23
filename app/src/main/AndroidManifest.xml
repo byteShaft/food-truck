@@ -5,8 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-feature
         android:name="android.hardware.location"
@@ -40,8 +41,8 @@
         <activity
             android:name=".customer.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".accounts.LoginActivity"
@@ -58,26 +59,29 @@
         <activity
             android:name=".UserTypeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".accounts.CodeConfirmationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".accounts.CodeConfirmationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".truckowner.AddNewTruck"
-            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".truckowner.AddNewTruck"
             android:label="Add new truck"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".truckowner.AddNewTruckStepTwo"
-            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".truckowner.AddNewTruckStepTwo"
             android:label="Add new truck"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".truckowner.TruckList"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".truckowner.TruckList"
             android:label="My Truck List"
-            android:screenOrientation="portrait">
-            </activity>
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".customer.TruckDetailsActivity"
-            android:screenOrientation="portrait">
-        </activity>
+        <activity
+            android:name=".customer.TruckDetailsActivity"
+            android:screenOrientation="portrait"></activity>
 
     </application>
 

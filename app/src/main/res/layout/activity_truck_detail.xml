@@ -51,8 +51,8 @@
                     android:layout_marginLeft="5dp"
                     android:padding="2dp"
                     android:text="Address"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
 
                 <RatingBar
                     android:id="@+id/rating"
@@ -70,58 +70,58 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="6"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
         android:background="@color/colorPrimary"
-        android:layout_alignParentBottom="true">
+        android:weightSum="6">
 
         <ImageButton
             android:id="@+id/facebook"
-            android:src="@mipmap/facebook"
-            android:background="@android:color/transparent"
-            android:layout_weight="1"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@mipmap/facebook" />
 
         <ImageButton
             android:id="@+id/website"
-            android:src="@mipmap/website"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:src="@mipmap/website" />
 
         <ImageButton
             android:id="@+id/twitter"
-            android:src="@mipmap/twitter"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:src="@mipmap/twitter" />
 
         <ImageButton
             android:id="@+id/instagram"
-            android:src="@mipmap/instagram_logo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:src="@mipmap/instagram_logo" />
 
         <ImageButton
             android:id="@+id/contact"
-            android:src="@android:drawable/ic_menu_call"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:src="@android:drawable/ic_menu_call" />
 
         <ImageButton
             android:id="@+id/navigate"
-            android:src="@mipmap/ic_location"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:src="@mipmap/ic_location" />
 
 
     </LinearLayout>
