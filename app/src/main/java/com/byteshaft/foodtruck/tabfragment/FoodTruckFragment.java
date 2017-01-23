@@ -7,6 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -32,11 +39,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.customer.MainActivity;
+import com.byteshaft.foodtruck.customer.TruckDetailsActivity;
 import com.byteshaft.foodtruck.truckowner.AddNewTruck;
 import com.byteshaft.foodtruck.truckowner.TruckDetail;
 import com.byteshaft.foodtruck.truckowner.TruckList;
@@ -47,8 +56,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -281,13 +290,13 @@ public class FoodTruckFragment extends Fragment implements
     @Override
     public void onLocationChanged(Location location) {
         Log.d("TAG", "Location changed called" + "Lat " +
-                location.getLatitude() + ", Lng "+ location.getLongitude());
+                location.getLatitude() + ", Lng " + location.getLongitude());
         lat = location.getLatitude();
         lng = location.getLongitude();
         counter++;
         if (counter >= 2) {
             stopLocationService();
-            getTrucksByLocation(lat+","+lng);
+            getTrucksByLocation(lat + "," + lng);
         }
     }
 
@@ -310,7 +319,7 @@ public class FoodTruckFragment extends Fragment implements
                 progressBar.setVisibility(View.GONE);
                 switch (request.getStatus()) {
                     case HttpURLConnection.HTTP_OK:
-                        Log.i("TAG", "Truck "+ request.getResponseText());
+                        Log.i("TAG", "Truck " + request.getResponseText());
                         try {
                             JSONObject mainData = new JSONObject(request.getResponseText());
                             nextUrl = mainData.getString("next");
@@ -422,18 +431,42 @@ public class FoodTruckFragment extends Fragment implements
                     .load(truckDetail.getImageUrl())
                     .resize(150, 150)
                     .centerCrop()
-                    .into(viewHolder.imageView, new Callback() {
+                    .into(new Target() {
                         @Override
-                        public void onSuccess() {
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            viewHolder.imageView.setImageBitmap(getDropShadow(bitmap));
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+                            viewHolder.imageView.setImageResource(R.mipmap.image_place_holder);
 
                         }
 
                         @Override
-                        public void onError() {
-
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
 
                         }
                     });
+            viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TruckDetail truckDetail = items.get(position);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), TruckDetailsActivity.class);
+                    intent.putExtra("id", truckDetail.getId());
+                    intent.putExtra("name", truckDetail.getTruckName());
+                    intent.putExtra("image", truckDetail.getImageUrl().toString());
+                    intent.putExtra("address", truckDetail.getAddress());
+                    intent.putExtra("location", truckDetail.getLatLng());
+                    intent.putExtra("phone", truckDetail.getContactNumber());
+                    intent.putExtra("products", truckDetail.getProducts());
+                    intent.putExtra("facebook", truckDetail.getFacebookUrl());
+                    intent.putExtra("website", truckDetail.getWebsiteUrl());
+                    intent.putExtra("instagram", truckDetail.getInstagramUrl());
+                    intent.putExtra("twitter", truckDetail.getTwitterUrl());
+                    startActivity(intent);
+                }
+            });
             viewHolder.facebookButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -451,7 +484,7 @@ public class FoodTruckFragment extends Fragment implements
                         Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getWebsiteUrl()));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getWebsiteUrl()));
                     startActivity(intent);
                 }
             });
@@ -493,6 +526,44 @@ public class FoodTruckFragment extends Fragment implements
 
         }
 
+        private Bitmap getDropShadow(Bitmap bitmap) {
+
+            if (bitmap == null) return null;
+            int think = 6;
+            int w = bitmap.getWidth();
+            int h = bitmap.getHeight();
+
+            int newW = w - (think);
+            int newH = h - (think);
+
+            Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+            Bitmap bmp = Bitmap.createBitmap(w, h, conf);
+            Bitmap sbmp = Bitmap.createScaledBitmap(bitmap, newW, newH, false);
+
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            Canvas c = new Canvas(bmp);
+
+            // Right
+            Shader rshader = new LinearGradient(newW, 0, w, 0, Color.GRAY, Color.LTGRAY, Shader.TileMode.CLAMP);
+            paint.setShader(rshader);
+            c.drawRect(newW, think, w, newH, paint);
+
+            // Bottom
+            Shader bshader = new LinearGradient(0, newH, 0, h, Color.GRAY, Color.LTGRAY, Shader.TileMode.CLAMP);
+            paint.setShader(bshader);
+            c.drawRect(think, newH, newW, h, paint);
+
+            //Corner
+            Shader cchader = new LinearGradient(0, newH, 0, h, Color.LTGRAY, Color.LTGRAY, Shader.TileMode.CLAMP);
+            paint.setShader(cchader);
+            c.drawRect(newW, newH, w, h, paint);
+
+
+            c.drawBitmap(sbmp, 0, 0, null);
+
+            return bmp;
+        }
+
         @Override
         public int getItemCount() {
             return items.size();
@@ -500,11 +571,6 @@ public class FoodTruckFragment extends Fragment implements
 
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-            View childView = rv.findChildViewUnder(e.getX(), e.getY());
-            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-                mListener.onItem(items.get(rv.getChildPosition(childView)));
-                return true;
-            }
             return false;
         }
 
@@ -534,6 +600,7 @@ public class FoodTruckFragment extends Fragment implements
         public ImageButton twitterButton;
         public ImageButton instagramButton;
         public RatingBar ratingBar;
+        public RelativeLayout relativeLayout;
 
         public CustomView(View itemView) {
             super(itemView);
@@ -546,6 +613,7 @@ public class FoodTruckFragment extends Fragment implements
             twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
             instagramButton = (ImageButton) itemView.findViewById(R.id.instrgram_button);
             ratingBar = (RatingBar) itemView.findViewById(R.id.rating);
+            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.main_layout);
         }
     }
 }
