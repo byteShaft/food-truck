@@ -464,6 +464,7 @@ public class FoodTruckFragment extends Fragment implements
                     intent.putExtra("website", truckDetail.getWebsiteUrl());
                     intent.putExtra("instagram", truckDetail.getInstagramUrl());
                     intent.putExtra("twitter", truckDetail.getTwitterUrl());
+                    intent.putExtra("rating", truckDetail.getRating());
                     startActivity(intent);
                 }
             });
@@ -474,6 +475,8 @@ public class FoodTruckFragment extends Fragment implements
                         Toast.makeText(mActivity, "No valid url provided", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(truckDetail.getFacebookUrl()));
+                    startActivity(intent);
                 }
             });
 
@@ -511,7 +514,6 @@ public class FoodTruckFragment extends Fragment implements
                     }
                     Uri uri = Uri.parse(truckDetail.getInstagramUrl());
                     Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
-
                     likeIng.setPackage("com.instagram.android");
 
                     try {

@@ -43,6 +43,11 @@ public class AddNewTruckStepTwo extends AppCompatActivity implements
         websiteUrl = (EditText) findViewById(R.id.website_url);
         twitterUrl = (EditText) findViewById(R.id.twitter_url);
         instagramUrl = (EditText) findViewById(R.id.instagram_url);
+
+        facebookUrl.setSelection(facebookUrl.getText().length());
+        twitterUrl.setSelection(twitterUrl.getText().length());
+        instagramUrl.setSelection(instagramUrl.getText().length());
+
         foodTruckButton = (AppCompatButton) findViewById(R.id.add_food_truck_button);
         foodTruckButton.setOnClickListener(this);
         if (getIntent().getExtras() != null) {
@@ -103,7 +108,7 @@ public class AddNewTruckStepTwo extends AppCompatActivity implements
                 switch (request.getStatus()) {
                     case HttpURLConnection.HTTP_CREATED:
                     case HttpURLConnection.HTTP_OK:
-                        Log.i("TAG", "Truck "+ request.getResponseText());
+                        Log.i("TAG", "Truck " + request.getResponseText());
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(request.getResponseText());
