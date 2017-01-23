@@ -1,129 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/top_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/top_image"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:foreground="@drawable/gradient"
-            android:src="@color/colorPrimary" />
+    <RelativeLayout
+        android:id="@+id/main_layout_"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        tools:context="com.byteshaft.foodtruck.customer.TruckDetailsActivity">
 
         <RelativeLayout
+            android:id="@+id/app_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="40dp"
-            android:layout_marginLeft="40dp">
-
-            <ImageView
-                android:id="@+id/food_truck_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@mipmap/icon_food_truck" />
+            android:layout_height="200dp"
+            android:background="@mipmap/new_design"
+            android:fitsSystemWindows="true">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
                 android:layout_toRightOf="@+id/food_truck_image"
                 android:orientation="vertical">
 
                 <com.byteshaft.foodtruck.utils.HeadingTextView
                     android:id="@+id/truck_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:padding="2dp"
                     android:text="Truck Name"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textColor="@android:color/black"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/truck_address"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:padding="2dp"
+                    android:layout_marginTop="6dp"
                     android:text="Address"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <RatingBar
                     android:id="@+id/rating"
                     style="?android:attr/ratingBarStyleIndicator"
                     android:layout_width="wrap_content"
+                    android:layout_marginTop="6dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp" />
+                    android:numStars="5"
+                    android:rating="5" />
+
             </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/food_truck_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/fab_margin"
+                android:src="@mipmap/image_place_holder"
+                app:layout_anchorGravity="bottom|start" />
+
+            <ImageView
+                android:id="@+id/top_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="@drawable/gradient" />
 
         </RelativeLayout>
 
-    </FrameLayout>
 
-    <LinearLayout
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorPrimary"
-        android:weightSum="6">
+        android:layout_below="@+id/main_layout_">
 
-        <ImageButton
-            android:id="@+id/facebook"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/facebook" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorPrimary"
+            android:weightSum="6">
 
-        <ImageButton
-            android:id="@+id/website"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/website" />
+            <ImageButton
+                android:id="@+id/facebook"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/facebook" />
 
-        <ImageButton
-            android:id="@+id/twitter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/twitter" />
+            <ImageButton
+                android:id="@+id/website"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/website" />
 
-        <ImageButton
-            android:id="@+id/instagram"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/instagram_logo" />
+            <ImageButton
+                android:id="@+id/twitter"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/twitter" />
 
-        <ImageButton
-            android:id="@+id/contact"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_menu_call" />
+            <ImageButton
+                android:id="@+id/instagram"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/instagram_logo" />
 
-        <ImageButton
-            android:id="@+id/navigate"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_location" />
+            <ImageButton
+                android:id="@+id/contact"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_call" />
+
+            <ImageButton
+                android:id="@+id/navigate"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/ic_location" />
 
 
-    </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
 
 </RelativeLayout>
