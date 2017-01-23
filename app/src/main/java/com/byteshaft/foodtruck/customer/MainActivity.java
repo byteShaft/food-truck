@@ -23,6 +23,7 @@ import com.byteshaft.foodtruck.tabfragment.FavouriteFragment;
 import com.byteshaft.foodtruck.tabfragment.FoodTruckFragment;
 import com.byteshaft.foodtruck.tabfragment.MapFragment;
 import com.byteshaft.foodtruck.tabfragment.SearchFragment;
+import com.byteshaft.foodtruck.truckowner.TruckList;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -91,7 +92,15 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        if (id == R.id.nav_food_truck_owner) {
+            startActivity(new Intent(getApplicationContext(), TruckList.class));
+            new android.os.Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MainActivity.getInstance().finish();
+                }
+            }, 2000);
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
