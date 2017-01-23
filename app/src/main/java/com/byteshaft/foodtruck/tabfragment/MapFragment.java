@@ -272,15 +272,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             myLng = location.getLongitude();
             getTrucksByLocation(myLat+","+myLng);
         }
-
     }
 
     private void getTrucksByLocation(String search) {
-        request = new HttpRequest(getActivity());
-        request.setOnReadyStateChangeListener(this);
-        request.setOnErrorListener(this);
-        request.open("GET", String.format("%strucks/filter-by-radius?base_location=%s", AppGlobals.BASE_URL, search));
-        request.send();
+        if (foreground) {
+            request = new HttpRequest(getActivity());
+            request.setOnReadyStateChangeListener(this);
+            request.setOnErrorListener(this);
+            request.open("GET", String.format("%strucks/filter-by-radius?base_location=%s", AppGlobals.BASE_URL, search));
+            request.send();
+        }
     }
 
     @Override

@@ -43,10 +43,11 @@
                 android:layout_below="@+id/truck_name"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:src="@mipmap/placeholder"
-                android:background="@drawable/image_border"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:src="@mipmap/image_place_holder"
+                android:background="@android:color/white"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_above="@+id/rating"/>
 
             <RatingBar
                 android:id="@+id/rating"

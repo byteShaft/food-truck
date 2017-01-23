@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/top_image"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:foreground="@drawable/gradient"
+            android:src="@color/colorPrimary" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="40dp">
+
+            <ImageView
+                android:id="@+id/food_truck_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@mipmap/icon_food_truck" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/food_truck_image"
+                android:orientation="vertical">
+
+                <com.byteshaft.foodtruck.utils.HeadingTextView
+                    android:id="@+id/truck_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:padding="2dp"
+                    android:text="Truck Name"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/truck_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:padding="2dp"
+                    android:text="Address"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white" />
+
+                <RatingBar
+                    android:id="@+id/rating"
+                    style="?android:attr/ratingBarStyleIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="6"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:id="@+id/facebook"
+            android:src="@mipmap/facebook"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageButton
+            android:id="@+id/website"
+            android:src="@mipmap/website"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageButton
+            android:id="@+id/twitter"
+            android:src="@mipmap/twitter"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageButton
+            android:id="@+id/instagram"
+            android:src="@mipmap/instagram_logo"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageButton
+            android:id="@+id/contact"
+            android:src="@android:drawable/ic_menu_call"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageButton
+            android:id="@+id/navigate"
+            android:src="@mipmap/ic_location"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>
