@@ -23,6 +23,8 @@ import com.byteshaft.foodtruck.utils.AppGlobals;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.Locale;
+
 /**
  * Created by s9iper1 on 1/21/17.
  */
@@ -76,6 +78,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
         foodTruckImage = (ImageView) findViewById(R.id.food_truck_image);
 
         mTruckName.setText(getIntent().getStringExtra("name"));
+        getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
         mAddress.setText(getIntent().getStringExtra("address"));
         mProducts.setText(getIntent().getStringExtra("products"));
         mTruckName.setTypeface(AppGlobals.typefaceBold);
@@ -196,9 +199,11 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
                 startActivity(intent);
                 break;
             case R.id.navigate:
-                Intent navigate = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse(String.format("http://maps.google.com/maps?saddr=%s", mLocationUrl)));
-                startActivity(navigate);
+                String[] latLng = mLocationUrl.split(",");
+                String uri = String.format(Locale.ENGLISH, "geo:%s,%s", latLng[0], latLng[1]);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(mapIntent);
+
                 break;
         }
     }

@@ -133,7 +133,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:src="@mipmap/instagram_logo" />
+                android:src="@mipmap/instagram" />
 
             <ImageButton
                 android:id="@+id/contact"
@@ -141,7 +141,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:src="@android:drawable/ic_menu_call" />
+                android:src="@mipmap/ic_phone" />
 
             <ImageButton
                 android:id="@+id/navigate"
