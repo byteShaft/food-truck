@@ -430,23 +430,23 @@ public class FoodTruckFragment extends Fragment implements
                     .load(truckDetail.getImageUrl())
                     .resize(150, 150)
                     .centerCrop()
-                    .into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            viewHolder.imageView.setImageBitmap(getDropShadow(bitmap));
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-                            viewHolder.imageView.setImageResource(R.mipmap.image_place_holder);
-
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
+                    .into(viewHolder.imageView);
+//                            new Target() {
+//                        @Override
+//                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                            viewHolder.imageView.setImageBitmap(getDropShadow(bitmap));
+//                        }
+//
+//                        @Override
+//                        public void onBitmapFailed(Drawable errorDrawable) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                        }
+//                    });
             viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
