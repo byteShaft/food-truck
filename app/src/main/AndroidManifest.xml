@@ -77,11 +77,14 @@
         <activity
             android:name=".truckowner.TruckList"
             android:label="My Truck List"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".customer.TruckDetailsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".SupportActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

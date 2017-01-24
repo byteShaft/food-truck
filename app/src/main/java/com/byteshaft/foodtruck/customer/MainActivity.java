@@ -3,22 +3,18 @@ package com.byteshaft.foodtruck.customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.support.design.widget.NavigationView;
+import android.support.v4.app.SupportActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.byteshaft.foodtruck.R;
-import com.byteshaft.foodtruck.accounts.LoginActivity;
 import com.byteshaft.foodtruck.tabfragment.FavouriteFragment;
 import com.byteshaft.foodtruck.tabfragment.FoodTruckFragment;
 import com.byteshaft.foodtruck.tabfragment.MapFragment;
@@ -101,6 +97,11 @@ public class MainActivity extends AppCompatActivity
                 }
             }, 2000);
         }
+
+        if (id == R.id.nav_support) {
+            startActivity(new Intent(getApplicationContext(), SupportActivity.class));
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
