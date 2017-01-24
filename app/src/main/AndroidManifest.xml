@@ -83,6 +83,12 @@
             android:name=".customer.TruckDetailsActivity"
             android:screenOrientation="portrait"></activity>
 
+        <activity android:name=".customer.AboutActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="About"
+            />
+
     </application>
 
 </manifest>

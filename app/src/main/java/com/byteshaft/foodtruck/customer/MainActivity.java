@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity
                     MainActivity.getInstance().finish();
                 }
             }, 2000);
+        } else if (id == R.id.nav_about) {
+            startActivity(new Intent(getApplicationContext(), AboutActivity.class));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
