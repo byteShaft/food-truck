@@ -46,7 +46,6 @@ import android.widget.Toast;
 import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.customer.MainActivity;
 import com.byteshaft.foodtruck.customer.TruckDetailsActivity;
-import com.byteshaft.foodtruck.truckowner.AddNewTruck;
 import com.byteshaft.foodtruck.truckowner.TruckDetail;
 import com.byteshaft.foodtruck.truckowner.TruckList;
 import com.byteshaft.foodtruck.utils.AppGlobals;
@@ -458,6 +457,7 @@ public class FoodTruckFragment extends Fragment implements
                     intent.putExtra("image", truckDetail.getImageUrl().toString());
                     intent.putExtra("address", truckDetail.getAddress());
                     intent.putExtra("location", truckDetail.getLatLng());
+                    System.out.println("Location.... " + truckDetail.getLatLng());
                     intent.putExtra("phone", truckDetail.getContactNumber());
                     intent.putExtra("products", truckDetail.getProducts());
                     intent.putExtra("facebook", truckDetail.getFacebookUrl());

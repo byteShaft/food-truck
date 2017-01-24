@@ -14,7 +14,6 @@ import com.byteshaft.foodtruck.utils.Helpers;
 import com.byteshaft.requests.FormData;
 import com.byteshaft.requests.HttpRequest;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,7 +82,7 @@ public class AddNewTruckStepTwo extends AppCompatActivity implements
         data.append(FormData.TYPE_CONTENT_TEXT, "phone_number",
                 AddNewTruck.getInstance().phoneNumber.getText().toString());
         data.append(FormData.TYPE_CONTENT_TEXT, "products",
-                AddNewTruck.getInstance().truckName.getText().toString());
+                AddNewTruck.getInstance().products.getText().toString());
         if (!AddNewTruck.getInstance().imageUrl.contains("http")) {
             data.append(FormData.TYPE_CONTENT_FILE, "photo",
                     AddNewTruck.getInstance().imageUrl);

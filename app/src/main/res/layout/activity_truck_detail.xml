@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
 
     <RelativeLayout
@@ -51,8 +51,8 @@
                     android:id="@+id/rating"
                     style="?android:attr/ratingBarStyleIndicator"
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="6dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
                     android:numStars="5"
                     android:rating="5" />
 
@@ -82,7 +82,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_layout_">
+        android:layout_below="@+id/main_layout_"
+        android:background="@android:drawable/edit_text">
+
+        <TextView
+            android:id="@+id/products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="Products"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
