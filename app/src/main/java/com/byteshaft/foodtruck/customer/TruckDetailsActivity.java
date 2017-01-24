@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
+import com.byteshaft.foodtruck.utils.AppGlobals;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -32,6 +33,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
     private ImageView foodTruckImage;
     private TextView mTruckName;
     private TextView mAddress;
+    private TextView mProducts;
     private ImageButton mFacebookButton;
     private ImageButton mWebsiteButton;
     private ImageButton mTwitterButton;
@@ -54,6 +56,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
         mRatingBar = (RatingBar) findViewById(R.id.rating);
         mTruckName = (TextView) findViewById(R.id.truck_name);
         mAddress = (TextView) findViewById(R.id.truck_address);
+        mProducts = (TextView) findViewById(R.id.products);
 
         mFacebookButton = (ImageButton) findViewById(R.id.facebook);
         mWebsiteButton = (ImageButton) findViewById(R.id.website);
@@ -74,6 +77,10 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
 
         mTruckName.setText(getIntent().getStringExtra("name"));
         mAddress.setText(getIntent().getStringExtra("address"));
+        mProducts.setText(getIntent().getStringExtra("products"));
+        mTruckName.setTypeface(AppGlobals.typefaceBold);
+        mAddress.setTypeface(AppGlobals.typefaceNormal);
+        mProducts.setTypeface(AppGlobals.typefaceBold);
         mRatingBar.setRating(getIntent().getFloatExtra("rating", 0));
 
         mFacebookUrl = getIntent().getStringExtra("facebook");
@@ -82,6 +89,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
         mInstagramUrl = getIntent().getStringExtra("instagram");
         mContact = getIntent().getStringExtra("phone");
         mLocationUrl = getIntent().getStringExtra("location");
+        System.out.println("Location lat long " + mLocationUrl);
 
         Picasso.with(this)
                 .load(getIntent().getStringExtra("image"))
@@ -188,6 +196,9 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
                 startActivity(intent);
                 break;
             case R.id.navigate:
+                Intent navigate = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse(String.format("http://maps.google.com/maps?saddr=%s", mLocationUrl)));
+                startActivity(navigate);
                 break;
         }
     }
