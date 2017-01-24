@@ -1,120 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/main_layout"
     android:clickable="true"
-    android:descendantFocusability="afterDescendants"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:descendantFocusability="afterDescendants">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
-        android:layout_margin="4dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="140dp"
+        android:layout_margin="4dp"
         app:cardCornerRadius="5dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@mipmap/new_design"
             android:padding="5dp">
-
-            <com.byteshaft.foodtruck.utils.HeadingTextView
-                android:id="@+id/truck_name"
-                android:text="Truck Name"
-                android:layout_toLeftOf="@+id/image"
-                android:padding="5dp"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/products"
-                android:padding="5dp"
-                android:layout_below="@+id/truck_name"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <ImageView
                 android:id="@+id/image"
-                android:padding="5dp"
-                android:layout_below="@+id/truck_name"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:src="@mipmap/image_place_holder"
-                android:background="@android:color/white"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_above="@+id/rating"/>
+                android:background="@null"
+                android:padding="2dp"
+                android:src="@mipmap/image_place_holder" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical">
+
+                <com.byteshaft.foodtruck.utils.HeadingTextView
+                    android:id="@+id/truck_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:text="Truck Name"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/products"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:text="products" />
+
+                <TextView
+                    android:id="@+id/truck_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:text="address" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/facebook_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@null"
+                        android:clickable="true"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="true"
+                        android:src="@mipmap/facebook" />
+
+                    <ImageButton
+                        android:id="@+id/website_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@null"
+                        android:clickable="true"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="true"
+                        android:src="@mipmap/website" />
+
+                    <ImageButton
+                        android:id="@+id/twitter_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@null"
+                        android:clickable="true"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="true"
+                        android:src="@mipmap/twitter" />
+
+                    <ImageButton
+                        android:id="@+id/instrgram_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@null"
+                        android:clickable="true"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="true"
+                        android:src="@mipmap/instagram" />
+                </LinearLayout>
+            </LinearLayout>
 
             <RatingBar
                 android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_alignBottom="@+id/social_layout"
-                style="?android:attr/ratingBarStyleIndicator"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@+id/social_layout"
-                />
-
-            <TextView
-                android:id="@+id/truck_address"
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <LinearLayout
-                android:id="@+id/social_layout"
+                style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:weightSum="4">
-                <ImageButton
-                    android:id="@+id/facebook_button"
-                    android:src="@mipmap/facebook"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:descendantFocusability="blocksDescendants"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp" />
-
-                <ImageButton
-                    android:id="@+id/website_button"
-                    android:src="@mipmap/website"
-                    android:descendantFocusability="blocksDescendants"
-                    android:layout_width="50dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:layout_height="50dp" />
-
-                <ImageButton
-                    android:id="@+id/twitter_button"
-                    android:src="@mipmap/twitter"
-                    android:layout_width="50dp"
-                    android:clickable="true"
-                    android:descendantFocusability="blocksDescendants"
-                    android:focusable="true"
-                    android:layout_height="50dp" />
-
-                <ImageButton
-                    android:id="@+id/instrgram_button"
-                    android:src="@mipmap/instagram"
-                    android:layout_width="50dp"
-                    android:clickable="true"
-                    android:descendantFocusability="blocksDescendants"
-                    android:focusable="true"
-                    android:layout_height="50dp"/>
-            </LinearLayout>
-
-
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/image"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                android:rating="5"
+                android:numStars="5" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
