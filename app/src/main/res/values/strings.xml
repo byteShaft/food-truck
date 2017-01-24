@@ -10,6 +10,7 @@
         AIzaSyBvZ3MtZpcjmMMOCWsOqFiW-J1ovPez_W4
     </string>
     <string name="forgot_password"><u>Forgot Password?</u></string>
+    <string name="description_text">Ran into an issue or bug? Send us a report with brief description below.</string>
 
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/button_color</item>
