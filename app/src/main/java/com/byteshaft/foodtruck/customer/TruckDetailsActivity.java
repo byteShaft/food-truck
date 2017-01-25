@@ -34,6 +34,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import static android.os.Build.VERSION_CODES.M;
+
 /**
  * Created by s9iper1 on 1/21/17.
  */
@@ -232,22 +234,22 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mWebsiteUrl)));
                 break;
             case R.id.twitter:
-                if (!mFacebookUrl.contains("http")) {
+                if (!mTwitterUrl.contains("http")) {
                     Toast.makeText(this, "No valid url provided", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(mFacebookUrl));
+                    i.setData(Uri.parse(mTwitterUrl));
                     startActivity(i);
                 }
                 break;
             case R.id.instagram:
-                if (!mFacebookUrl.contains("http")) {
+                if (!mInstagramUrl.contains("http")) {
                     Toast.makeText(this, "No valid url provided", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(mFacebookUrl));
+                    i.setData(Uri.parse(mInstagramUrl));
                     startActivity(i);
                 }
                 break;
