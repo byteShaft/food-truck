@@ -22,6 +22,7 @@ public class AppGlobals extends Application {
     public static final String KEY_USER_ACTIVE = "user_active";
     public static final String BASE_URL = "http://178.62.35.70/api/";
     public static final String SERVER_IP = "http://178.62.35.70/";
+    public static final String KEY_FAVOURITE = "key_favourites";
 
     @Override
     public void onCreate() {

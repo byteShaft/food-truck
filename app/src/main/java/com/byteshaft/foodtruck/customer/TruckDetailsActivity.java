@@ -17,6 +17,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -28,11 +31,16 @@ import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.utils.AppGlobals;
+import com.byteshaft.foodtruck.utils.Helpers;
 import com.byteshaft.foodtruck.utils.RatingDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
+
+import static android.os.Build.VERSION_CODES.M;
 
 /**
  * Created by s9iper1 on 1/21/17.
@@ -61,6 +69,8 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
     private String mContact;
     private String mLocationUrl;
     private String mTruckId;
+    private MenuItem favtItem;
+    private int id;
     private RatingDialog ratingDialog;
 
 
@@ -68,6 +78,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_truck_detail);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ratingDialog = new RatingDialog(this);
         mRatingBar = (RatingBar) findViewById(R.id.rating);
@@ -96,6 +107,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
         mTruckId = String.valueOf(getIntent().getIntExtra("id", -1));
         System.out.println("My Truck ID:  " + mTruckId);
         mTruckName.setText(getIntent().getStringExtra("name"));
+        id = getIntent().getIntExtra("id", -1);
         getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
         mAddress.setText(getIntent().getStringExtra("address"));
         mProducts.setMovementMethod(new ScrollingMovementMethod());
@@ -133,7 +145,46 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
 
                     }
                 });
-//        foodTruckImage.setImageBitmap(getDropShadow());
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.favt_menu, menu);
+        favtItem = menu.findItem(R.id.action_favt);
+        if (Helpers.getFavouritesToSharedPreferences().contains(String.valueOf(id))) {
+            favtItem.setIcon(R.mipmap.favt);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favt:
+                if (Helpers.getFavouritesToSharedPreferences().contains(String.valueOf(id))) {
+                    Set<String> stringSet = Helpers.getFavouritesToSharedPreferences();
+                    stringSet.remove(String.valueOf(id));
+                    Helpers.saveFavouritesToSharedPreferences(stringSet);
+                    favtItem.setIcon(R.mipmap.not_fav);
+                } else {
+                    Set<String> stringSet = Helpers.getFavouritesToSharedPreferences();
+                    Set<String> tobeAdded = new HashSet<>();
+                    tobeAdded.add(String.valueOf(id));
+                    for (String truckId: stringSet) {
+                        tobeAdded.add(truckId);
+                    }
+                    Helpers.saveFavouritesToSharedPreferences(tobeAdded);
+                    favtItem.setIcon(R.mipmap.favt);
+                    Log.i("TAG", Helpers.getFavouritesToSharedPreferences().toString());
+                }
+                break;
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private Bitmap getDropShadow(Bitmap bitmap) {
@@ -193,22 +244,22 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mWebsiteUrl)));
                 break;
             case R.id.twitter:
-                if (!mFacebookUrl.contains("http")) {
+                if (!mTwitterUrl.contains("http")) {
                     Toast.makeText(this, "No valid url provided", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(mFacebookUrl));
+                    i.setData(Uri.parse(mTwitterUrl));
                     startActivity(i);
                 }
                 break;
             case R.id.instagram:
-                if (!mFacebookUrl.contains("http")) {
+                if (!mInstagramUrl.contains("http")) {
                     Toast.makeText(this, "No valid url provided", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(mFacebookUrl));
+                    i.setData(Uri.parse(mInstagramUrl));
                     startActivity(i);
                 }
                 break;

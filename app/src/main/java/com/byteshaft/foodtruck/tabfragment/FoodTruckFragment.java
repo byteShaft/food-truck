@@ -101,7 +101,7 @@ public class FoodTruckFragment extends Fragment implements
         MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         MainActivity.getInstance().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         mBaseView = inflater.inflate(R.layout.truck_fragment, container, false);
-        truckDetails = new ArrayList<TruckDetail>();
+        truckDetails = new ArrayList<>();
         foreground = true;
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Food Trucks");
         mRecyclerView = (RecyclerView) mBaseView.findViewById(R.id.truck_list);
@@ -293,7 +293,7 @@ public class FoodTruckFragment extends Fragment implements
         lat = location.getLatitude();
         lng = location.getLongitude();
         counter++;
-        if (counter >= 2) {
+        if (counter >= 1) {
             stopLocationService();
             getTrucksByLocation(lat + "," + lng);
         }
