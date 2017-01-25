@@ -3,9 +3,15 @@ package com.byteshaft.foodtruck.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.LocationManager;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.byteshaft.foodtruck.utils.AppGlobals.getPreferenceManager;
 
 /**
  * Created by shahid on 14/01/2017.
@@ -64,5 +70,16 @@ public class Helpers {
         }
 
         return gps_enabled || network_enabled;
+    }
+
+    public static void saveFavouritesToSharedPreferences(Set<String> value) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().putStringSet(AppGlobals.KEY_FAVOURITE, value).apply();
+    }
+
+    public static Set<String> getFavouritesToSharedPreferences() {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        Set<String> strings = new HashSet<>();
+        return sharedPreferences.getStringSet(AppGlobals.KEY_FAVOURITE, strings);
     }
 }
