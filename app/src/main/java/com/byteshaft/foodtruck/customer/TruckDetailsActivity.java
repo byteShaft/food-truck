@@ -11,6 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,10 +23,13 @@ import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.utils.AppGlobals;
+import com.byteshaft.foodtruck.utils.Helpers;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by s9iper1 on 1/21/17.
@@ -50,6 +56,8 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
     private String mInstagramUrl;
     private String mContact;
     private String mLocationUrl;
+    private MenuItem favtItem;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +86,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
         foodTruckImage = (ImageView) findViewById(R.id.food_truck_image);
 
         mTruckName.setText(getIntent().getStringExtra("name"));
+        id = getIntent().getIntExtra("id", -1);
         getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
         mAddress.setText(getIntent().getStringExtra("address"));
         mProducts.setText(getIntent().getStringExtra("products"));
@@ -114,7 +123,43 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
 
                     }
                 });
-//        foodTruckImage.setImageBitmap(getDropShadow());
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.favt_menu, menu);
+        favtItem = menu.findItem(R.id.action_favt);
+        if (Helpers.getFavouritesToSharedPreferences().contains(String.valueOf(id))) {
+            favtItem.setIcon(R.mipmap.favt);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favt:
+                if (Helpers.getFavouritesToSharedPreferences().contains(String.valueOf(id))) {
+                    Set<String> stringSet = Helpers.getFavouritesToSharedPreferences();
+                    stringSet.remove(String.valueOf(id));
+                    Helpers.saveFavouritesToSharedPreferences(stringSet);
+                    favtItem.setIcon(R.mipmap.not_fav);
+                } else {
+                    Set<String> stringSet = Helpers.getFavouritesToSharedPreferences();
+                    Set<String> tobeAdded = new HashSet<>();
+                    tobeAdded.add(String.valueOf(id));
+                    for (String truckId: stringSet) {
+                        tobeAdded.add(truckId);
+                    }
+                    Helpers.saveFavouritesToSharedPreferences(tobeAdded);
+                    favtItem.setIcon(R.mipmap.favt);
+                    Log.i("TAG", Helpers.getFavouritesToSharedPreferences().toString());
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private Bitmap getDropShadow(Bitmap bitmap) {
