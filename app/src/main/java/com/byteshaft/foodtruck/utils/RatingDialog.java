@@ -3,10 +3,12 @@ package com.byteshaft.foodtruck.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.customer.TruckDetailsActivity;
@@ -94,6 +96,7 @@ public class RatingDialog extends Dialog implements
 
     @Override
     public void onReadyStateChange(HttpRequest request, int readyState) {
+        Log.i("TAg", request.getResponseURL());
         switch (readyState) {
             case HttpRequest.STATE_DONE:
                 Helpers.dismissProgressDialog();
@@ -106,14 +109,20 @@ public class RatingDialog extends Dialog implements
                         break;
                     case HttpURLConnection.HTTP_FORBIDDEN:
                         break;
-                    case HttpURLConnection.HTTP_OK:
+                    case HttpURLConnection.HTTP_CREATED:
                         try {
                             JSONObject jsonObject = new JSONObject(request.getResponseText());
+                            Log.i("TAG", jsonObject.toString());
+                            Toast.makeText(c, "Success", Toast.LENGTH_SHORT).show();
 
                             dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        break;
+                    case HttpURLConnection.HTTP_CONFLICT:
+                        AppGlobals.alertDialog(c, "Rating", "You already rated this truck");
+                        break;
                 }
         }
     }
