@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.byteshaft.foodtruck.R;
 import com.byteshaft.foodtruck.utils.AppGlobals;
 import com.byteshaft.foodtruck.utils.Helpers;
+import com.byteshaft.foodtruck.utils.RatingDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -49,7 +52,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
     private ImageButton mCallButton;
     private ImageButton mLocationButton;
     private RatingBar mRatingBar;
-
+    private Button mRateButton;
     private String mFacebookUrl;
     private String mWebsiteUrl;
     private String mTwitterUrl;
@@ -58,11 +61,14 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
     private String mLocationUrl;
     private MenuItem favtItem;
     private int id;
+    private RatingDialog ratingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_truck_detail);
+
+        ratingDialog = new RatingDialog(this);
         mRatingBar = (RatingBar) findViewById(R.id.rating);
         mTruckName = (TextView) findViewById(R.id.truck_name);
         mAddress = (TextView) findViewById(R.id.truck_address);
@@ -74,7 +80,9 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
         mInstagramButton = (ImageButton) findViewById(R.id.instagram);
         mCallButton = (ImageButton) findViewById(R.id.contact);
         mLocationButton = (ImageButton) findViewById(R.id.navigate);
+        mRateButton = (Button) findViewById(R.id.rate_button);
 
+        mRateButton.setOnClickListener(this);
         mFacebookButton.setOnClickListener(this);
         mWebsiteButton.setOnClickListener(this);
         mTwitterButton.setOnClickListener(this);
@@ -89,6 +97,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
         id = getIntent().getIntExtra("id", -1);
         getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
         mAddress.setText(getIntent().getStringExtra("address"));
+        mProducts.setMovementMethod(new ScrollingMovementMethod());
         mProducts.setText(getIntent().getStringExtra("products"));
         mTruckName.setTypeface(AppGlobals.typefaceBold);
         mAddress.setTypeface(AppGlobals.typefaceNormal);
@@ -248,7 +257,9 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
                 String uri = String.format(Locale.ENGLISH, "geo:%s,%s", latLng[0], latLng[1]);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 startActivity(mapIntent);
-
+                break;
+            case R.id.rate_button:
+                ratingDialog.show();
                 break;
         }
     }
