@@ -6,7 +6,6 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.SupportActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(getApplicationContext(), AboutActivity.class));
         } else if (id == R.id.nav_support) {
-            startActivity(new Intent(getApplicationContext(), TestActivity.class));
+            startActivity(new Intent(getApplicationContext(), ContactActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

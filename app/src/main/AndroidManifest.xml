@@ -88,7 +88,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".customer.TestActivity"
+            android:name=".customer.ContactActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar" />
