@@ -1,6 +1,8 @@
 package com.byteshaft.foodtruck.customer;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +12,11 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +48,7 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class TruckDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 12;
     private ImageView topImage;
     private ImageView foodTruckImage;
     private TextView mTruckName;
@@ -61,9 +68,11 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
     private String mInstagramUrl;
     private String mContact;
     private String mLocationUrl;
+    private String mTruckId;
     private MenuItem favtItem;
     private int id;
     private RatingDialog ratingDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +104,8 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
 
         topImage = (ImageView) findViewById(R.id.top_image);
         foodTruckImage = (ImageView) findViewById(R.id.food_truck_image);
-
+        mTruckId = String.valueOf(getIntent().getIntExtra("id", -1));
+        System.out.println("My Truck ID:  " + mTruckId);
         mTruckName.setText(getIntent().getStringExtra("name"));
         id = getIntent().getIntExtra("id", -1);
         getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
@@ -265,8 +275,53 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
                 startActivity(mapIntent);
                 break;
             case R.id.rate_button:
-                ratingDialog.show();
+                checkPermission();
+                AppGlobals.saveDataToSharedPreferences("truck_id", mTruckId);
                 break;
+        }
+    }
+
+    private void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.READ_PHONE_STATE},
+                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+
+        } else {
+            ratingDialog.show();
+        }
+    }
+
+    public String getUuID() {
+        TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String uuid = tManager.getDeviceId();
+        System.out.println("My id is:  " + uuid);
+        return uuid;
+    }
+
+    public String truckId() {
+        return mTruckId;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    ratingDialog.show();
+                    AppGlobals.saveDataToSharedPreferences("uuid", getUuID());
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 }
