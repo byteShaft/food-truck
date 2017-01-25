@@ -67,6 +67,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_truck_detail);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ratingDialog = new RatingDialog(this);
         mRatingBar = (RatingBar) findViewById(R.id.rating);
@@ -102,7 +103,7 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
         mTruckName.setTypeface(AppGlobals.typefaceBold);
         mAddress.setTypeface(AppGlobals.typefaceNormal);
         mProducts.setTypeface(AppGlobals.typefaceBold);
-        mRatingBar.setRating(getIntent().getFloatExtra("rating", 0));
+        mRatingBar.setRating(Float.parseFloat(getIntent().getStringExtra("rating")));
 
         mFacebookUrl = getIntent().getStringExtra("facebook");
         mWebsiteUrl = getIntent().getStringExtra("website");
@@ -166,6 +167,9 @@ public class TruckDetailsActivity extends AppCompatActivity implements View.OnCl
                     favtItem.setIcon(R.mipmap.favt);
                     Log.i("TAG", Helpers.getFavouritesToSharedPreferences().toString());
                 }
+                break;
+            case android.R.id.home:
+                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);

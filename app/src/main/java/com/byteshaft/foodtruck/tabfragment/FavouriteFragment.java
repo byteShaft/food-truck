@@ -65,6 +65,7 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
+import static android.R.attr.id;
 import static com.byteshaft.foodtruck.utils.Helpers.locationEnabled;
 
 /**
@@ -72,9 +73,7 @@ import static com.byteshaft.foodtruck.utils.Helpers.locationEnabled;
  */
 
 public class FavouriteFragment extends Fragment  implements
-        HttpRequest.OnReadyStateChangeListener, HttpRequest.OnErrorListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        HttpRequest.OnReadyStateChangeListener, HttpRequest.OnErrorListener {
 
     private View mBaseView;
     private RecyclerView mRecyclerView;
@@ -84,14 +83,8 @@ public class FavouriteFragment extends Fragment  implements
     private HttpRequest request;
     private String nextUrl;
     private ArrayList<TruckDetail> truckDetails;
-    private LocationRequest mLocationRequest;
-    private GoogleApiClient mGoogleApiClient;
-    public double lat;
-    public double lng;
-    private int counter = 0;
-    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
-    private static final int ENABLE_LOCATION = 1;
     private static boolean foreground = false;
+    private String idList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,7 +94,7 @@ public class FavouriteFragment extends Fragment  implements
         MainActivity.getInstance().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         MainActivity.getInstance().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         mBaseView = inflater.inflate(R.layout.favourite_fragment, container, false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favourites");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favorites");
         truckDetails = new ArrayList<>();
         foreground = true;
         mRecyclerView = (RecyclerView) mBaseView.findViewById(R.id.truck_list);
@@ -114,27 +107,15 @@ public class FavouriteFragment extends Fragment  implements
         customAdapter = new CustomAdapter(truckDetails, getActivity());
         mRecyclerView.setAdapter(customAdapter);
         Log.i("TAG", "favt " + Helpers.getFavouritesToSharedPreferences().toString());
-
+        idList = Helpers.getFavouritesToSharedPreferences().toString().replace("[", "").replace("]", "").replaceAll(" ", "");
+        Log.i("TAG", "favt " + idList);
         return mBaseView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        if (ContextCompat.checkSelfPermission(getActivity(),
-//                Manifest.permission.ACCESS_FINE_LOCATION)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions(
-//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                    MY_PERMISSIONS_REQUEST_LOCATION);
-//        } else {
-//            if (locationEnabled()) {
-//                buildGoogleApiClient();
-//                mGoogleApiClient.connect();
-//            } else {
-//                notifyUser();
-//            }
-//        }
+        getFavoriteTruck(idList);
 
     }
 
@@ -150,142 +131,12 @@ public class FavouriteFragment extends Fragment  implements
         foreground = false;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    System.out.println("True");
-                    if (!locationEnabled()) {
-                        // notify user
-                        notifyUser();
-                    } else {
-                        buildGoogleApiClient();
-                        mGoogleApiClient.connect();
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "Permission denied!", Toast.LENGTH_SHORT).show();
-
-                }
-                return;
-            }
-        }
-    }
-
-    private void notifyUser() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setMessage("Location is not enabled");
-        dialog.setPositiveButton("Turn on", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                // TODO Auto-generated method stub
-                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivityForResult(myIntent, ENABLE_LOCATION);
-                //get gps
-            }
-        });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-        dialog.show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case ENABLE_LOCATION:
-                if (locationEnabled()) {
-                    buildGoogleApiClient();
-                    mGoogleApiClient.connect();
-                }
-                break;
-        }
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    public void stopLocationService() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
-        mGoogleApiClient.disconnect();
-    }
-
-    public void startLocationUpdates() {
-        long INTERVAL = 0;
-        long FASTEST_INTERVAL = 0;
-        if (ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        startLocationUpdates();
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d("TAG", "Location changed called" + "Lat " +
-                location.getLatitude() + ", Lng " + location.getLongitude());
-        lat = location.getLatitude();
-        lng = location.getLongitude();
-        counter++;
-        if (counter >= 2) {
-            stopLocationService();
-            getTrucksByLocation(lat + "," + lng);
-        }
-    }
-
-
-    private void getTrucksByLocation(String search) {
+    private void getFavoriteTruck(String search) {
         if (foreground) {
             request = new HttpRequest(getActivity());
             request.setOnReadyStateChangeListener(this);
             request.setOnErrorListener(this);
-            request.open("GET", String.format("%strucks/list-by-ids?truck=%s", AppGlobals.BASE_URL, search));
+            request.open("GET", String.format("%strucks/list-by-ids?trucks=%s", AppGlobals.BASE_URL, search));
             request.send();
             progressBar.setVisibility(View.VISIBLE);
         }
@@ -293,6 +144,8 @@ public class FavouriteFragment extends Fragment  implements
 
     @Override
     public void onReadyStateChange(HttpRequest request, int readyState) {
+        Log.i("TAG", "Truck " + request.getResponseURL());
+
         switch (readyState) {
             case HttpRequest.STATE_DONE:
                 progressBar.setVisibility(View.GONE);
@@ -300,9 +153,9 @@ public class FavouriteFragment extends Fragment  implements
                     case HttpURLConnection.HTTP_OK:
                         Log.i("TAG", "Truck " + request.getResponseText());
                         try {
-                            JSONObject mainData = new JSONObject(request.getResponseText());
-                            nextUrl = mainData.getString("next");
-                            JSONArray jsonArray = mainData.getJSONArray("results");
+//                            JSONObject mainData = new JSONObject(request.getResponseText());
+//                            nextUrl = mainData.getString("next");
+                            JSONArray jsonArray = new JSONArray(request.getResponseText());
                             if (jsonArray.length() > 0) {
 
                             } else {
@@ -317,8 +170,8 @@ public class FavouriteFragment extends Fragment  implements
                                 truckDetail.setLatLng(jsonObject.getString("location"));
                                 truckDetail.setContactNumber(jsonObject.getString("phone_number"));
                                 truckDetail.setProducts(jsonObject.getString("products"));
-                                truckDetail.setImageUrl(Uri.parse(jsonObject.getString("photo")
-                                        .replace("http://localhost/", AppGlobals.SERVER_IP)));
+                                truckDetail.setImageUrl(Uri.parse(String.format("%s%s", AppGlobals.SERVER_IP,
+                                        jsonObject.getString("photo"))));
                                 truckDetail.setRating(jsonObject.getString("ratings"));
                                 truckDetail.setWebsiteUrl(jsonObject.getString("website"));
                                 truckDetail.setFacebookUrl(jsonObject.getString("facebook"));
