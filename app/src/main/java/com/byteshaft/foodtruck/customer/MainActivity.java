@@ -98,10 +98,8 @@ public class MainActivity extends AppCompatActivity
             }, 2000);
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(getApplicationContext(), AboutActivity.class));
-        }
-
-        if (id == R.id.nav_support) {
-            startActivity(new Intent(getApplicationContext(), SupportActivity.class));
+        } else if (id == R.id.nav_support) {
+            startActivity(new Intent(getApplicationContext(), TestActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

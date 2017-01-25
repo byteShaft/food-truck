@@ -81,16 +81,17 @@
         <activity
             android:name=".customer.TruckDetailsActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".customer.AboutActivity"
+            android:label="About"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".SupportActivity"
-            android:screenOrientation="portrait" />
-
-        <activity android:name=".customer.AboutActivity"
+            android:name=".customer.TestActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="About"
-            />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 
