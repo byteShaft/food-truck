@@ -87,18 +87,31 @@
         <TextView
             android:id="@+id/products"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/rate_button"
             android:layout_marginTop="30dp"
             android:gravity="center"
+            android:scrollbars="vertical"
             android:text="Products"
             android:textSize="30sp"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/rate_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_above="@+id/social_layout"
+            android:text="Rate this Truck"
+            android:theme="@style/AppTheme.Button" />
+
         <LinearLayout
+            android:id="@+id/social_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="6dp"
             android:background="@color/colorPrimary"
             android:weightSum="6">
 
@@ -149,8 +162,6 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:src="@mipmap/ic_location" />
-
-
         </LinearLayout>
     </RelativeLayout>
 
