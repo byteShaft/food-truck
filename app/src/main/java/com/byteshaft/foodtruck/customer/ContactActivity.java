@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.byteshaft.foodtruck.R;
 
-public class TestActivity extends AppCompatActivity {
+public class ContactActivity extends AppCompatActivity {
 
     TextView textView;
 
@@ -28,10 +28,8 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-
+        setContentView(R.layout.activity_contact);
         textView = (TextView) findViewById(R.id.description_text);
-
         mName = (EditText) findViewById(R.id.name_et);
         mSubject = (EditText) findViewById(R.id.subject_et);
         mDetails = (EditText) findViewById(R.id.details);
