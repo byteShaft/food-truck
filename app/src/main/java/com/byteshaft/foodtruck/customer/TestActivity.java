@@ -1,4 +1,4 @@
-package com.byteshaft.foodtruck;
+package com.byteshaft.foodtruck.customer;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,14 +9,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class SupportActivity extends AppCompatActivity {
+import com.byteshaft.foodtruck.R;
+
+public class TestActivity extends AppCompatActivity {
 
     TextView textView;
+
     EditText mName;
     EditText mSubject;
     EditText mDetails;
-    Button mSendButton;
 
+    Button mSendButton;
 
     String mNameString;
     String mSubjectString;
@@ -25,11 +28,14 @@ public class SupportActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_support);
-        setTitle("Support");
+        setContentView(R.layout.activity_test);
+
         textView = (TextView) findViewById(R.id.description_text);
-        mSubject = (EditText) findViewById(R.id.subject_et);
+
         mName = (EditText) findViewById(R.id.name_et);
+        mSubject = (EditText) findViewById(R.id.subject_et);
+        mDetails = (EditText) findViewById(R.id.details);
+
         mSendButton = (Button) findViewById(R.id.submit_button);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,8 +54,10 @@ public class SupportActivity extends AppCompatActivity {
     public boolean validate() {
         boolean valid = true;
 
-        mSubjectString = mSubject.getText().toString();
+
         mNameString = mName.getText().toString();
+        mSubjectString = mSubject.getText().toString();
+        mDetailsString = mDetails.getText().toString();
 
         if (mNameString.isEmpty()) {
             mName.setError("name is required");
@@ -66,7 +74,7 @@ public class SupportActivity extends AppCompatActivity {
         }
 
         if (mDetailsString.trim().isEmpty()) {
-            mDetails.setError("please provide details");
+            mDetails.setError("please provide some details");
         } else {
             mDetails.setError(null);
         }
