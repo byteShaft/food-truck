@@ -14,11 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.byteshaft.foodtruck.R;
+import com.byteshaft.foodtruck.accounts.LoginActivity;
 import com.byteshaft.foodtruck.tabfragment.FavouriteFragment;
 import com.byteshaft.foodtruck.tabfragment.FoodTruckFragment;
 import com.byteshaft.foodtruck.tabfragment.MapFragment;
 import com.byteshaft.foodtruck.tabfragment.SearchFragment;
 import com.byteshaft.foodtruck.truckowner.TruckList;
+import com.byteshaft.foodtruck.utils.AppGlobals;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -88,7 +90,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_food_truck_owner) {
-            startActivity(new Intent(getApplicationContext(), TruckList.class));
+            if (AppGlobals.isUserLoggedIn() && AppGlobals.isUserActive()) {
+                startActivity(new Intent(getApplicationContext(), TruckList.class));
+            } else {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            }
             new android.os.Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
