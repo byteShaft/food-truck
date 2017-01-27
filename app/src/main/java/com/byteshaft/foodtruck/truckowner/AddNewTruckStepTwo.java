@@ -101,6 +101,7 @@ public class AddNewTruckStepTwo extends AppCompatActivity implements
 
     @Override
     public void onReadyStateChange(HttpRequest request, int readyState) {
+        Log.i("TAG", request.getResponseURL());
         switch (readyState) {
             case HttpRequest.STATE_DONE:
                 Helpers.dismissProgressDialog();
